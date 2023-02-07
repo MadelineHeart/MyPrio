@@ -1,4 +1,4 @@
-package com.madhaus.myprio.dagger
+package com.madhaus.myprio.data.dagger
 
 import android.app.Application
 import com.madhaus.myprio.data.repos.SettingsRepository

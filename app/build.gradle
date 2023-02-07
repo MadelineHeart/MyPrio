@@ -73,6 +73,9 @@ dependencies {
 
     // Testing Libs
     testImplementation "junit:junit:$jUnitVers"
+    testImplementation "org.mockito:mockito-core:3.+"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.+"
+
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitExtVers"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVers"
 }

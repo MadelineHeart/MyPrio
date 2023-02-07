@@ -10,49 +10,59 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 import javax.inject.Inject
 
-class TaskUseCase
-@Inject constructor(private val taskRepository: TaskRepository) {
+interface TaskUseCase {
+    val taskListFlow: Flow<List<Task>>
 
-    private val _taskListFlow: MutableStateFlow<List<Task>> = MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
-    val taskListFlow: Flow<List<Task>> = _taskListFlow
+    fun fetchTaskList(atTime: Long): List<Task>
+    fun fetchTask(taskId: UUID): Task?
+    fun fetchOrCreateTask(taskId: UUID?): Task
+    fun makeOrUpdateTask(newTask: Task): Boolean
+    fun markTaskDone(taskId: UUID, completedTimestamp: Long): Boolean
+    fun deleteTask(taskId: UUID): Boolean
+}
+
+class TaskUseCaseImpl(private val taskRepository: TaskRepository): TaskUseCase {
+
+//    private val _taskListFlow: MutableStateFlow<List<Task>> = MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
+    override val taskListFlow: MutableStateFlow<List<Task>> = MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
 
     init {
         CoroutineScope(Dispatchers.Main).launch {
             taskRepository.fetchTasksFlow()
                 .map { tasks -> tasks.sortedWith(taskSortComparator) }
                 .collectLatest {
-                _taskListFlow.tryEmit(it)
+                taskListFlow.tryEmit(it)
             }
         }
     }
 
 
-    fun fetchTaskList(atTime: Long): List<Task> {
+    override fun fetchTaskList(atTime: Long): List<Task> {
         return runBlocking {
             return@runBlocking taskRepository.fetchTasks()
                 .sortedWith(taskSortComparator)
         }
     }
 
-    fun fetchTask(taskId: UUID): Task? {
+    override fun fetchTask(taskId: UUID): Task? {
         return runBlocking {
             return@runBlocking taskRepository.fetchTask(taskId)
         }
     }
 
-    fun fetchOrCreateTask(taskId: UUID?): Task {
+    override fun fetchOrCreateTask(taskId: UUID?): Task {
         return runBlocking {
             return@runBlocking taskId?.let { taskRepository.fetchTask(it) } ?: Task(UUID.randomUUID())
         }
     }
 
-    fun makeOrUpdateTask(newTask: Task): Boolean {
+    override fun makeOrUpdateTask(newTask: Task): Boolean {
         return runBlocking {
             return@runBlocking taskRepository.saveTask(newTask)
         }
     }
 
-    fun markTaskDone(taskId: UUID, completedTimestamp: Long): Boolean {
+    override fun markTaskDone(taskId: UUID, completedTimestamp: Long): Boolean {
         return runBlocking {
             return@runBlocking taskRepository.fetchTask(taskId)?.let { task ->
                 task.lastCompletedTimestamp = completedTimestamp
@@ -61,7 +71,7 @@ class TaskUseCase
         }
     }
 
-    fun deleteTask(taskId: UUID): Boolean {
+    override fun deleteTask(taskId: UUID): Boolean {
         return runBlocking {
             return@runBlocking taskRepository.deleteTask(taskId)
         }

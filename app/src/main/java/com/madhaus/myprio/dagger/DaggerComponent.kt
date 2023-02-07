@@ -1,6 +1,8 @@
 package com.madhaus.myprio.dagger
 
 import android.app.Application
+import com.madhaus.myprio.data.dagger.RepositoryModule
+import com.madhaus.myprio.domain.dagger.UseCaseModule
 import com.madhaus.myprio.presentation.PushNotifService
 import com.madhaus.myprio.presentation.PushNotificationWorker
 import com.madhaus.myprio.presentation.MainActivity
@@ -15,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [RepositoryModule::class,
-        ServiceModule::class]
+        UseCaseModule::class]
 )
 interface BaseDaggerComponent {
     @Component.Builder
