@@ -1,0 +1,34 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MyPrio" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/active_LM</item>
+        <item name="colorPrimaryVariant">@color/disabled_LM</item>
+        <item name="colorOnPrimary">@color/background_LM</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/brand_purple</item>
+        <item name="colorSecondaryVariant">@color/disabled_disclaimer_text_LM</item>
+        <item name="colorOnSecondary">@color/background_LM</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="activeViewBackground">@color/active_LM</item>
+        <item name="disabledViewBackground">@color/disabled_LM</item>
+        <item name="activityBackground">@color/background_LM</item>
+
+        <item name="mainText">@color/main_text_LM</item>
+        <item name="disabledMainText">@color/disabled_main_text_LM</item>
+        <item name="subText">@color/disclaimer_text_LM</item>
+        <item name="disabledSubText">@color/disabled_disclaimer_text_LM</item>
+
+        <item name="activeButtonColor">@color/brand_purple</item>
+        <item name="disabledButtonColor">@color/sub_button_background_LM</item>
+    </style>
+
+    <style name="Theme.MyPrio.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MyPrio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

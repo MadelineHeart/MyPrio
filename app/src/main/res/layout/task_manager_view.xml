@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="presoTask"
+            type="com.madhaus.myprio.presentation.models.PresoTask" />
+    </data>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorOnSecondary">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSecondary"
+            app:popupTheme="@style/Theme.MyPrio.PopupOverlay" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorOnPrimary"
+            android:padding="16dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/priorityIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@{context.getColor(presoTask.priorityColor)}"
+                android:gravity="center"
+                android:text="@{Integer.toString(presoTask.basePriority)}"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/title"
+                style="@style/EditTextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Title . . ."
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@={presoTask.title}"
+                app:layout_constraintBottom_toBottomOf="@id/priorityIcon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/priorityIcon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/description"
+                style="@style/EditTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description . . ."
+                android:text="@={presoTask.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <TextView
+                android:id="@+id/repeatDurationDirections"
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Days to task resets:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <EditText
+                android:id="@+id/repeatDurationInput"
+                style="@style/EditTextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@={presoTask.displayDaysToRepeat}"
+                app:layout_constraintBottom_toBottomOf="@id/repeatDurationDirections"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/repeatDurationDirections" />
+
+            <TextView
+                android:id="@+id/escalateDurationDirections"
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Days to task escalates:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/repeatDurationDirections" />
+
+            <EditText
+                android:id="@+id/escalateDurationInput"
+                style="@style/EditTextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@={presoTask.displayDaysToEscalate}"
+                app:layout_constraintBottom_toBottomOf="@id/escalateDurationDirections"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/escalateDurationDirections" />
+
+            <TextView
+                android:id="@+id/escalateAmountDirections"
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Escalate priority by:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/escalateDurationDirections" />
+
+            <EditText
+                android:id="@+id/escalateAmountInput"
+                style="@style/EditTextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:digits="123456789"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@={presoTask.displayEscalateBy}"
+                app:layout_constraintBottom_toBottomOf="@id/escalateAmountDirections"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/escalateAmountDirections" />
+
+            <Button
+                android:id="@+id/saveButton"
+                style="@style/MainButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="SAVE"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="@style/SubButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:text="CANCEL"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</layout>

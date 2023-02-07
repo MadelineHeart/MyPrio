@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>-->
+
+    <!-- Universal Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="brand_purple">#FF8422FF</color>
+
+    <!-- Priority Badge Colors -->
+    <color name="max_priority">#FFFF2211</color>
+    <color name="high_priority">#FFBB6633</color>
+    <color name="medium_priority">#FF99BB00</color>
+    <color name="low_priority">#FF22CC22</color>
+    <color name="no_priority">#FF886688</color>
+
+    <!-- Light Mode Colors -->
+    <color name="background_LM">#FF999999</color>
+    <color name="disabled_LM">#FFBBBBBB</color>
+    <color name="active_LM">#FFEEEEEE</color>
+
+    <color name="main_text_LM">#FF111111</color>
+    <color name="disabled_main_text_LM">#FF111111</color>
+    <color name="disclaimer_text_LM">#FF444444</color>
+    <color name="disabled_disclaimer_text_LM">#FF444444</color>
+
+    <!--<color name="main_button_background_LM">#FF8422FF</color>-->
+    <color name="sub_button_background_LM">#FF666688</color>
+
+    <!-- Dark Mode Colors -->
+    <color name="background_DM">#FF443344</color>
+    <color name="disabled_DM">#FF353035</color>
+    <color name="active_DM">#FF302030</color>
+
+    <color name="main_text_DM">#FFF0CCF0</color>
+    <color name="disabled_main_text_DM">#FFA088A0</color>
+    <color name="disclaimer_text_DM">#FF777788</color>
+    <color name="disabled_disclaimer_text_DM">#FF665566</color>
+
+    <!--<color name="main_button_background_DM">#FF9533FF</color>-->
+    <color name="sub_button_background_DM">#FF666688</color>
+</resources>

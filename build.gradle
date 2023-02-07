@@ -1,0 +1,40 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.0' apply false
+    id 'com.android.library' version '7.3.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+}
+
+ext {
+    // Core Google Libs
+    androidCoreVers = '1.9.0'
+    appCompatVers = '1.5.1'
+    fragmentNavigationVers = '2.5.3'
+
+    // Dependency Injection
+    daggerVers = '2.44'
+
+    // Caching
+    roomVers = '2.4.3'
+
+    // Background Service Manager
+    work_version = "2.7.1"
+
+    // Logging
+    timberVers = '5.0.1'
+
+    // UI Libs
+    materialVers = '1.7.0'
+    constraintLayoutVers = '2.1.4'
+
+    // Testing Libs
+    jUnitVers = '4.13.2'
+    androidJUnitExtVers = '1.1.3'
+    espressoVers = '3.4.0'
+}
+
+configurations {
+    all {
+        exlude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    }
+}

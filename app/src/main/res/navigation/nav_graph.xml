@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/TaskFeedFragment">
+
+    <fragment
+        android:id="@+id/TaskFeedFragment"
+        android:name="com.madhaus.myprio.presentation.taskfeed.TaskFeedFragment"
+        android:label="@string/task_feed_label"
+        tools:layout="@layout/task_feed_view">
+
+        <action
+            android:id="@+id/navigate_feed_to_manager"
+            app:destination="@id/TaskManagerFragment" />
+
+        <action
+            android:id="@+id/navigate_feed_to_settings"
+            app:destination="@id/SettingsFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.madhaus.myprio.presentation.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/settings_view">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/TaskManagerFragment"
+        android:name="com.madhaus.myprio.presentation.taskmanager.TaskManagerFragment"
+        android:label="@string/task_manager_label"
+        tools:layout="@layout/task_manager_view">
+
+        <action
+            android:id="@+id/navigate_manager_to_feed"
+            app:popUpTo="@id/TaskFeedFragment"
+            app:destination="@id/TaskFeedFragment" />
+
+    </fragment>
+</navigation>

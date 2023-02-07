@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SharedTheme">
+
+        <attr name="activeViewBackground" format="color"/>
+        <attr name="disabledViewBackground" format="color"/>
+        <attr name="activityBackground" format="color"/>
+
+        <attr name="mainText" format="color"/>
+        <attr name="disabledMainText" format="color"/>
+        <attr name="subText" format="color"/>
+        <attr name="disabledSubText" format="color"/>
+
+        <attr name="activeButtonColor" format="color"/>
+        <attr name="disabledButtonColor" format="color"/>
+
+    </declare-styleable>
+</resources>

@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.madhaus.myprio'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.madhaus.myprio"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    kapt {
+        generateStubs = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+}
+
+dependencies {
+    // Core Google Libs
+    implementation "androidx.core:core-ktx:$androidCoreVers"
+    implementation "androidx.appcompat:appcompat:$appCompatVers"
+    implementation "androidx.navigation:navigation-fragment-ktx:$fragmentNavigationVers"
+    implementation "androidx.navigation:navigation-ui-ktx:$fragmentNavigationVers"
+
+    // Dependency Injection Libs
+    implementation "com.google.dagger:dagger:$daggerVers"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVers"
+    kapt "com.google.dagger:dagger-compiler:$daggerVers"
+    implementation "com.google.dagger:dagger-android:$daggerVers"
+    implementation "com.google.dagger:dagger-android-support:$daggerVers"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVers"
+
+    // Caching
+    implementation "androidx.room:room-runtime:$roomVers"
+    annotationProcessor "androidx.room:room-compiler:$roomVers"
+    kapt "androidx.room:room-compiler:$roomVers"
+    implementation "androidx.room:room-ktx:$roomVers"
+
+    // Background Service Manager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    // Logging
+    implementation "com.jakewharton.timber:timber:$timberVers"
+
+    // UI Libs
+    implementation "com.google.android.material:material:$materialVers"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVers"
+
+    // Testing Libs
+    testImplementation "junit:junit:$jUnitVers"
+    androidTestImplementation "androidx.test.ext:junit:$androidJUnitExtVers"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVers"
+}

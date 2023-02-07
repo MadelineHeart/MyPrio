@@ -1,0 +1,70 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MyPrio" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/active_DM</item>
+        <item name="colorPrimaryVariant">@color/disabled_DM</item>
+        <item name="colorOnPrimary">@color/background_DM</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/brand_purple</item>
+        <item name="colorSecondaryVariant">@color/disclaimer_text_DM</item>
+        <item name="colorOnSecondary">@color/background_DM</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/brand_purple</item>
+        <!-- Customize your theme here. -->
+        <item name="activeViewBackground">@color/active_DM</item>
+        <item name="disabledViewBackground">@color/disabled_DM</item>
+        <item name="activityBackground">@color/background_DM</item>
+
+        <item name="mainText">@color/main_text_DM</item>
+        <item name="disabledMainText">@color/disabled_main_text_DM</item>
+        <item name="subText">@color/disclaimer_text_DM</item>
+        <item name="disabledSubText">@color/disabled_disclaimer_text_DM</item>
+
+        <item name="activeButtonColor">@color/brand_purple</item>
+        <item name="disabledButtonColor">@color/sub_button_background_DM</item>
+    </style>
+
+    <style name="Theme.MyPrio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/brand_purple</item>
+    </style>
+
+    <style name="HeaderText" parent="Theme.MyPrio">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/mainText</item>
+    </style>
+
+    <style name="BodyText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/main_text_DM</item>
+    </style>
+
+    <style name="MinorText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/disclaimer_text_DM</item>
+    </style>
+
+    <style name="EditTextInput">
+        <item name="android:textColor">@color/main_text_DM</item>
+        <item name="android:textColorHint">@color/disclaimer_text_DM</item>
+    </style>
+
+    <style name="MainButton">
+        <item name="android:backgroundTint">?attr/activeButtonColor</item>
+        <item name="android:textColor">@color/main_text_DM</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.5</item>
+    </style>
+
+    <style name="SubButton">
+        <item name="android:backgroundTint">@color/sub_button_background_DM</item>
+        <item name="android:textColor">@color/main_text_DM</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.5</item>
+    </style>
+</resources>
