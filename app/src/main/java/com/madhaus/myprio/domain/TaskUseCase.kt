@@ -2,6 +2,7 @@ package com.madhaus.myprio.domain
 
 import com.madhaus.myprio.data.Task
 import com.madhaus.myprio.data.TaskRepository
+import com.madhaus.myprio.data.TimeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -23,8 +24,8 @@ interface TaskUseCase {
 
 class TaskUseCaseImpl(private val taskRepository: TaskRepository): TaskUseCase {
 
-//    private val _taskListFlow: MutableStateFlow<List<Task>> = MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
-    override val taskListFlow: MutableStateFlow<List<Task>> = MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
+    override val taskListFlow: MutableStateFlow<List<Task>> =
+        MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
 
     init {
         CoroutineScope(Dispatchers.Main).launch {
@@ -65,7 +66,7 @@ class TaskUseCaseImpl(private val taskRepository: TaskRepository): TaskUseCase {
     override fun markTaskDone(taskId: UUID, completedTimestamp: Long): Boolean {
         return runBlocking {
             return@runBlocking taskRepository.fetchTask(taskId)?.let { task ->
-                task.lastCompletedTimestamp = completedTimestamp
+                task.lastCompletedTimestamp = TimeUtils.normalizeToMidnight(completedTimestamp)
                 taskRepository.saveTask(task)
             } ?: false
         }
