@@ -8,10 +8,11 @@ class TimeUtilsTests {
 
     @Test
     fun testMillisInCurrentDay() {
+        val timeStamp = System.currentTimeMillis()
         val currentDate = Calendar.getInstance()
-        currentDate.timeInMillis = System.currentTimeMillis()
+        currentDate.timeInMillis = timeStamp
 
-        val sumMillis = TimeUtils.getMillisInCurrentDay(System.currentTimeMillis())
+        val sumMillis = TimeUtils.getMillisInCurrentDay(timeStamp)
 
         val hours = sumMillis / (1000 * 60 * 60)
         Assert.assertEquals(currentDate.get(Calendar.HOUR_OF_DAY), hours.toInt())

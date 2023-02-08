@@ -15,7 +15,7 @@ class PushNotificationUseCaseImpl(private val taskUseCase: TaskUseCase,
                                   private val settingsRepository: SettingsRepository) : PushNotificationUseCase {
     override fun fetchDailyDigest(forTime: Long): List<PresoNotification> =
         taskUseCase.fetchTaskList(forTime)
-            .filter { it.getPriority(forTime) > settingsRepository.getDigestMinimumPriority() }
+            .filter { it.getPriority(forTime) >= settingsRepository.getDigestMinimumPriority() }
             .map {
                 PresoNotification(
                     R.drawable.ic_round_add_24,
@@ -26,8 +26,9 @@ class PushNotificationUseCaseImpl(private val taskUseCase: TaskUseCase,
             }
 
     override fun getTimeToNextDigest(currentTime: Long): Long {
-        return (24 * 60 * 60 * 1000) -                          // An entire day
+        return ((24 * 60 * 60 * 1000) -                          // An entire day
                 TimeUtils.getMillisInCurrentDay(currentTime) +  // Time till 00:00 of the next day
-                (1000 * 60 * settingsRepository.getDigestSendTimeInMinutes()) // Final time
+                (1000 * 60 * settingsRepository.getDigestSendTimeInMinutes())) %// Send time into text day
+                (24 * 60 * 60 * 1000) // Mod by entire day in case send time is later today
     }
 }
