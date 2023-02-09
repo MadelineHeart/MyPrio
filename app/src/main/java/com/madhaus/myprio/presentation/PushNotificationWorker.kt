@@ -2,83 +2,22 @@ package com.madhaus.myprio.presentation
 
 import android.app.*
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.os.IBinder
 import androidx.work.*
 import com.madhaus.myprio.dagger.BaseDaggerComponent
-import com.madhaus.myprio.data.repos.SettingsRepository
 import com.madhaus.myprio.domain.PushNotificationUseCase
 import com.madhaus.myprio.presentation.models.PresoNotification
 import kotlinx.coroutines.runBlocking
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class PushNotifService : Service() {
-    @Inject
-    lateinit var pushUseCase: PushNotificationUseCase
-
-    init {
-        BaseDaggerComponent.injector.inject(this)
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Should check job ids to make sure nothing is queued
-        val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
-            .setInitialDelay(pushUseCase.getTimeToNextDigest(System.currentTimeMillis()), TimeUnit.MILLISECONDS)
-            .build()
-        WorkManager
-            .getInstance(this)
-            .enqueue(pushWorkRequest)
-
-        /* TAKE ME OUT, FOR TESTING */
-//        testingFunction()
-        /* END TAKE OUT */
-
-        return START_NOT_STICKY
-    }
-
-    fun testingFunction() {
-        Timber.e("PUSH TESTING FUNC CALLED")
-        val notifManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            notifManager.notificationChannels.firstOrNull { it.id == "My_Prio_Notifs" } == null
-        ) {
-            val channel = NotificationChannel(
-                "My_Prio_Notifs",
-                "Channel for all My Prio notifications",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notifManager.createNotificationChannel(channel)
-        }
-        val contexto = this
-        runBlocking {
-            pushUseCase.fetchDailyDigest(System.currentTimeMillis()).forEach {
-                notifManager.notify(
-                    UUID.randomUUID().mostSignificantBits.toInt(),
-                    it.buildSystemNotif(contexto, "My_Prio_Daily_Digest", "My_Prio_Notifs")
-                )
-            }
-        }
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        // Not currently set up for binding
-        return null
-    }
-}
 
 class PushNotificationWorker(private val appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
 
     @Inject
     lateinit var pushUseCase: PushNotificationUseCase
+    var shouldSend: Boolean //Differentiate between requests to activate vs send time
 
     private lateinit var notifManager: NotificationManager
     private lateinit var workManager: WorkManager
@@ -88,11 +27,13 @@ class PushNotificationWorker(private val appContext: Context, workerParams: Work
 
     init {
         BaseDaggerComponent.injector.inject(this)
+        shouldSend = workerParams.tags.contains(digestGroupTag)
     }
 
     override fun doWork(): Result {
         setupManagers()
-        sendDailyDigest()
+        if (shouldSend)
+            sendDailyDigest()
 
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
             .setInitialDelay(pushUseCase.getTimeToNextDigest(System.currentTimeMillis()), TimeUnit.MILLISECONDS)
@@ -140,5 +81,15 @@ class PushNotificationWorker(private val appContext: Context, workerParams: Work
             UUID.randomUUID().mostSignificantBits.toInt(),
             notif.buildSystemNotif(appContext, digestGroupTag, channelId)
         )
+    }
+
+    companion object {
+        fun activate(context: Context) {
+            val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
+                .build()
+            WorkManager
+                .getInstance(context)
+                .enqueue(pushWorkRequest)
+        }
     }
 }

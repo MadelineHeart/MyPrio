@@ -3,7 +3,6 @@ package com.madhaus.myprio.dagger
 import android.app.Application
 import com.madhaus.myprio.data.dagger.RepositoryModule
 import com.madhaus.myprio.domain.dagger.UseCaseModule
-import com.madhaus.myprio.presentation.PushNotifService
 import com.madhaus.myprio.presentation.PushNotificationWorker
 import com.madhaus.myprio.presentation.MainActivity
 import com.madhaus.myprio.presentation.settings.SettingsFragment
@@ -42,9 +41,6 @@ interface BaseDaggerComponent {
 
     /** Adapters **/
     fun inject(taskFeedAdapter: TaskFeedAdapter)
-
-    /** Services **/
-    fun inject(pushNotifServiceImpl: PushNotifService)
 
     /** Workers **/
     fun inject(notificationWorker: PushNotificationWorker)
