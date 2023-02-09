@@ -1,10 +1,8 @@
 package com.madhaus.myprio.domain
 
 import com.madhaus.myprio.data.Task
-import com.madhaus.myprio.data.TimeUtils
 import com.madhaus.myprio.data.repos.SettingsRepository
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock

@@ -17,7 +17,7 @@ class PushNotificationWorker(private val appContext: Context, workerParams: Work
 
     @Inject
     lateinit var pushUseCase: PushNotificationUseCase
-    var shouldSend: Boolean //Differentiate between requests to activate vs send time
+    var shouldSend: Boolean // Differentiate between requests to activate vs send time
 
     private lateinit var notifManager: NotificationManager
     private lateinit var workManager: WorkManager
