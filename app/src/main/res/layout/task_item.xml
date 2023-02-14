@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="presoTask"
             type="com.madhaus.myprio.presentation.models.PresoTask" />
@@ -18,7 +17,7 @@
         android:layout_marginBottom="4dp"
         android:animateLayoutChanges="true"
         android:background="@drawable/task_item_background"
-        android:backgroundTint="@{presoTask.itemBackground}">
+        android:backgroundTint="@{presoTask.getItemBackground(System.currentTimeMillis())}">
 
         <TextView
             android:id="@+id/priorityIcon"
@@ -26,10 +25,10 @@
             android:layout_height="40dp"
             android:layout_margin="8dp"
             android:background="@drawable/priority_badge_background"
-            android:backgroundTint="@{context.getColor(presoTask.priorityColor)}"
+            android:backgroundTint="@{context.getColor(presoTask.getPriorityColor(System.currentTimeMillis()))}"
             android:gravity="center"
             android:text="@{`` + presoTask.getPriority(System.currentTimeMillis())}"
-            android:textColor="@{presoTask.itemMainTextColor}"
+            android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@{presoTask.title}"
-            android:textColor="@{presoTask.itemMainTextColor}"
+            android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{presoTask.activationTime}"
-            android:textColor="@{presoTask.itemMainTextColor}"
+            android:text="@{presoTask.getActivationTime(System.currentTimeMillis())}"
+            android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -71,7 +70,7 @@
             android:layout_marginEnd="8dp"
             android:paddingBottom="8dp"
             android:text="@{presoTask.lastCompletedDate}"
-            android:textColor="@{presoTask.itemSubTextColor}"
+            android:textColor="@{presoTask.getItemSubTextColor(System.currentTimeMillis())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"
             app:layout_constraintTop_toBottomOf="@id/timeToActivate" />
@@ -96,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="@{presoTask.description}"
-                android:textColor="@{presoTask.itemMainTextColor}"
+                android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

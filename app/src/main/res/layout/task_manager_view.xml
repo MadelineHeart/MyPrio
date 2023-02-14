@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="presoTask"
             type="com.madhaus.myprio.presentation.models.PresoTask" />
@@ -27,6 +26,11 @@
             android:background="?attr/colorOnPrimary"
             android:padding="16dp">
 
+            <include
+                android:id="@+id/example_task_cell"
+                layout="@layout/task_item"
+                app:presoTask="@={presoTask}"/>
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="wrap_content"
@@ -34,32 +38,20 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <TextView
-                android:id="@+id/priorityIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@{context.getColor(presoTask.priorityColor)}"
-                android:gravity="center"
-                android:text="@{Integer.toString(presoTask.basePriority)}"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <EditText
                 android:id="@+id/title"
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Title . . ."
+                android:layout_marginTop="16dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:text="@={presoTask.title}"
-                app:layout_constraintBottom_toBottomOf="@id/priorityIcon"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/priorityIcon"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/example_task_cell" />
 
             <EditText
                 android:id="@+id/description"
@@ -73,6 +65,31 @@
                 app:layout_constraintTop_toBottomOf="@id/title" />
 
             <TextView
+                android:id="@+id/basePriorityDirections"
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Initial Priority:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <EditText
+                android:id="@+id/basePriorityInput"
+                style="@style/EditTextInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@={presoTask.displayBasePriority}"
+                app:layout_constraintBottom_toBottomOf="@id/basePriorityDirections"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/basePriorityDirections" />
+
+            <TextView
                 android:id="@+id/repeatDurationDirections"
                 style="@style/HeaderText"
                 android:layout_width="wrap_content"
@@ -80,7 +97,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Days to task resets:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description" />
+                app:layout_constraintTop_toBottomOf="@id/basePriorityDirections" />
 
             <EditText
                 android:id="@+id/repeatDurationInput"

@@ -12,12 +12,14 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class PushNotificationWorker(private val appContext: Context, workerParams: WorkerParameters) :
+class PushNotificationWorker(
+    private val appContext: Context,
+    private val workerParams: WorkerParameters
+) :
     Worker(appContext, workerParams) {
 
     @Inject
     lateinit var pushUseCase: PushNotificationUseCase
-    var shouldSend: Boolean // Differentiate between requests to activate vs send time
 
     private lateinit var notifManager: NotificationManager
     private lateinit var workManager: WorkManager
@@ -27,16 +29,18 @@ class PushNotificationWorker(private val appContext: Context, workerParams: Work
 
     init {
         BaseDaggerComponent.injector.inject(this)
-        shouldSend = workerParams.tags.contains(digestGroupTag)
     }
 
     override fun doWork(): Result {
         setupManagers()
-        if (shouldSend)
+        if (shouldSend())
             sendDailyDigest()
 
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
-            .setInitialDelay(pushUseCase.getTimeToNextDigest(System.currentTimeMillis()), TimeUnit.MILLISECONDS)
+            .setInitialDelay(
+                pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
+                TimeUnit.MILLISECONDS
+            )
             .addTag(digestGroupTag)
             .build()
 
@@ -66,6 +70,10 @@ class PushNotificationWorker(private val appContext: Context, workerParams: Work
         // Work Manager
         workManager = WorkManager.getInstance(appContext)
     }
+
+    private fun shouldSend(): Boolean =
+        workerParams.tags.contains(digestGroupTag) &&
+                workManager.getWorkInfosByTag(digestGroupTag).get().isEmpty()
 
     fun sendDailyDigest() {
         workManager.cancelAllWorkByTag(digestGroupTag)

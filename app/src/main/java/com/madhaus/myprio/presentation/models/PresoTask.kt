@@ -18,6 +18,12 @@ class PresoTask(private val context: Context, task: Task) : Task(
     task.daysToEscalate,
     task.lastCompletedTimestamp
 ) {
+    var displayBasePriority: String
+        get() = "$basePriority"
+        set(value) {
+            basePriority = value.toIntOrNull() ?: 1
+        }
+
     var displayDaysToRepeat: String
         get() = daysToRepeat?.let { "$it" } ?: ""
         set(value) {
@@ -42,22 +48,22 @@ class PresoTask(private val context: Context, task: Task) : Task(
             ?: "Malformed Task"
     }
 
-    fun getActivationTime(): String {
+    fun getActivationTime(forTime: Long): String {
         val millisInDay: Long = TimeUnit.DAYS.toMillis(1)
         val repeatTimestamp = millisInDay * (daysToRepeat ?: 0)
-        val timeDelta = System.currentTimeMillis() - (lastCompletedTimestamp ?: 0)
+        val timeDelta = forTime - (lastCompletedTimestamp ?: 0)
         return if (repeatTimestamp > timeDelta) {
             "${TimeUnit.MILLISECONDS.toDays(repeatTimestamp - timeDelta)} days till reactivation"
         } else {
             val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-            lastCompletedTimestamp?.let { "Became active on ${formatter.format(Date(it + repeatTimestamp))}" }
+            lastCompletedTimestamp?.let { "Activated on: ${formatter.format(Date(it + repeatTimestamp))}" }
                 ?: "Malformed Task"
         }
     }
 
-    fun getItemBackground(): Int {
+    fun getItemBackground(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(System.currentTimeMillis()) == 0)
+        val output = if (getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledViewBackground, 0)
         else
             theme.getColor(R.styleable.SharedTheme_activeViewBackground, 0)
@@ -65,9 +71,9 @@ class PresoTask(private val context: Context, task: Task) : Task(
         return output
     }
 
-    fun getItemMainTextColor(): Int {
+    fun getItemMainTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(System.currentTimeMillis()) == 0)
+        val output = if (getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledMainText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_mainText, 0)
@@ -75,9 +81,9 @@ class PresoTask(private val context: Context, task: Task) : Task(
         return output
     }
 
-    fun getItemSubTextColor(): Int {
+    fun getItemSubTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(System.currentTimeMillis()) == 0)
+        val output = if (getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledSubText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_subText, 0)
@@ -85,8 +91,8 @@ class PresoTask(private val context: Context, task: Task) : Task(
         return output
     }
 
-    fun getPriorityColor(): Int {
-        return when (getPriority(System.currentTimeMillis())) {
+    fun getPriorityColor(forTime: Long): Int {
+        return when (getPriority(forTime)) {
             0 -> R.color.no_priority
             in 1..3 -> R.color.low_priority
             in 4..6 -> R.color.medium_priority
