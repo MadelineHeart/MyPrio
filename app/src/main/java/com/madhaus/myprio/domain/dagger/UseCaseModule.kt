@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-// TODO we can probably delete this
 @Module(includes = [RepositoryModule::class])
 class UseCaseModule {
 

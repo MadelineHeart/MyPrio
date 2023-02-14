@@ -1,14 +1,19 @@
 package com.madhaus.myprio.presentation.models
 
 import android.content.Context
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.lifecycle.MutableLiveData
 import com.madhaus.myprio.R
+import com.madhaus.myprio.BR
 import com.madhaus.myprio.data.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 /** Put all purely view concerned functions here **/
-class PresoTask(private val context: Context, task: Task) : Task(
+class PresoTask(private val context: Context,
+                task: Task) : Task(
     task.id,
     task.title,
     task.basePriority,
@@ -18,6 +23,10 @@ class PresoTask(private val context: Context, task: Task) : Task(
     task.daysToEscalate,
     task.lastCompletedTimestamp
 ) {
+    val inner = InnerPresoTask(title)
+
+    var displayTitle = MutableLiveData<String>(title)
+
     var displayBasePriority: String
         get() = "$basePriority"
         set(value) {
@@ -53,7 +62,7 @@ class PresoTask(private val context: Context, task: Task) : Task(
         val repeatTimestamp = millisInDay * (daysToRepeat ?: 0)
         val timeDelta = forTime - (lastCompletedTimestamp ?: 0)
         return if (repeatTimestamp > timeDelta) {
-            "${TimeUnit.MILLISECONDS.toDays(repeatTimestamp - timeDelta)} days till reactivation"
+            "${TimeUnit.MILLISECONDS.toDays(repeatTimestamp - timeDelta) + 1} days till reactivation"
         } else {
             val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
             lastCompletedTimestamp?.let { "Activated on: ${formatter.format(Date(it + repeatTimestamp))}" }
@@ -100,5 +109,17 @@ class PresoTask(private val context: Context, task: Task) : Task(
             9 -> R.color.max_priority
             else -> R.color.no_priority
         }
+    }
+
+
+    // TRYING OUT OBSERVABLE HERE
+    class InnerPresoTask(title: String): BaseObservable() {
+        @get:Bindable
+        var title: String = title
+            set(value) {
+                field = value
+                notifyPropertyChanged(BR.title)
+            }
+
     }
 }

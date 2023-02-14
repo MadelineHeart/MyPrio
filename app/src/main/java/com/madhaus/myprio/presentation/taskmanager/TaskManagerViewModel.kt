@@ -1,46 +1,66 @@
 package com.madhaus.myprio.presentation.taskmanager
 
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.madhaus.myprio.data.Task
 import com.madhaus.myprio.data.TimeUtils
 import com.madhaus.myprio.domain.TaskUseCase
+import com.madhaus.myprio.presentation.models.PresoTask
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class TaskManagerViewModel
-@Inject constructor(private val taskUseCase: TaskUseCase) {
-    private val _saveAndExitFlow = MutableSharedFlow<Boolean>(1)
-    val saveAndExitFlow: Flow<Boolean> = _saveAndExitFlow
+interface TaskManagerViewModel {
+    val taskLD: LiveData<PresoTask>
+    val saveAndExitFlow: Flow<Boolean>
+    val errorFlow: Flow<String>
 
-    private val _errorFlow = MutableSharedFlow<String>(1)
-    val errorFlow: Flow<String> = _errorFlow
+    fun getTask(taskId: UUID?): Task
+    fun deleteTask(taskId: UUID): Boolean
+    fun saveAndExit(toSave: Task)
+    fun cancelAndExit()
+}
 
-    fun getTask(taskId: UUID?): Task {
+class TaskManagerViewModelImpl(
+    private val taskUseCase: TaskUseCase,
+    private val context: Context
+) : TaskManagerViewModel {
+    override val taskLD = MutableLiveData<PresoTask>()
+
+    override val saveAndExitFlow = MutableSharedFlow<Boolean>(1)
+    override val errorFlow = MutableSharedFlow<String>(1)
+
+    override fun getTask(taskId: UUID?): Task {
+        val task = taskUseCase.fetchOrCreateTask(taskId)
+        taskLD.postValue(PresoTask(context, task))
         return taskUseCase.fetchOrCreateTask(taskId)
     }
 
-    fun deleteTask(taskId: UUID): Boolean {
+    override fun deleteTask(taskId: UUID): Boolean {
         val result = taskUseCase.deleteTask(taskId)
         // If we deleted, shouldn't remain on edit page
-        if (result) { cancelAndExit() }
+        if (result) {
+            cancelAndExit()
+        }
         return result
     }
 
-    fun saveAndExit(toSave: Task) {
+    override fun saveAndExit(toSave: Task) {
         // If a new task, set proper identifiers
         if (toSave.lastCompletedTimestamp == null)
-            toSave.lastCompletedTimestamp = TimeUtils.normalizeToMidnight(System.currentTimeMillis())
+            toSave.lastCompletedTimestamp =
+                TimeUtils.normalizeToMidnight(System.currentTimeMillis())
 
         if (toSave.verify())
-            _saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(toSave))
+            saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(toSave))
         else
-            _errorFlow.tryEmit("Task is malformed, cannot save.")
+            errorFlow.tryEmit("Task is malformed, cannot save.")
     }
 
-    fun cancelAndExit() {
-        _saveAndExitFlow.tryEmit(false)
+    override fun cancelAndExit() {
+        saveAndExitFlow.tryEmit(false)
     }
 }

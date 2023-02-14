@@ -29,9 +29,9 @@ class TaskManagerFragment : Fragment() {
         savedInstanceState: Bundle?): View {
         BaseDaggerComponent.injector.inject(this)
 
-
         val binding = TaskManagerViewBinding.inflate(inflater, container, false)
         binding.presoTask = PresoTask(requireContext(), vm.getTask(arguments?.getSerializable("UUID") as? UUID))
+        binding.vm = vm
         _binding = binding
 
         return binding.root

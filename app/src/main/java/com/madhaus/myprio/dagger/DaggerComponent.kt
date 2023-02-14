@@ -5,6 +5,7 @@ import com.madhaus.myprio.data.dagger.RepositoryModule
 import com.madhaus.myprio.domain.dagger.UseCaseModule
 import com.madhaus.myprio.presentation.PushNotificationWorker
 import com.madhaus.myprio.presentation.MainActivity
+import com.madhaus.myprio.presentation.dagger.ViewModelModule
 import com.madhaus.myprio.presentation.settings.SettingsFragment
 import com.madhaus.myprio.presentation.taskfeed.TaskFeedAdapter
 import com.madhaus.myprio.presentation.taskfeed.TaskFeedFragment
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [RepositoryModule::class,
-        UseCaseModule::class]
+        UseCaseModule::class,
+        ViewModelModule::class]
 )
 interface BaseDaggerComponent {
     @Component.Builder

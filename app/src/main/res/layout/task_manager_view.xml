@@ -6,6 +6,9 @@
         <variable
             name="presoTask"
             type="com.madhaus.myprio.presentation.models.PresoTask" />
+        <variable
+            name="vm"
+            type="com.madhaus.myprio.presentation.taskmanager.TaskManagerViewModel" />
     </data>
 
     <com.google.android.material.appbar.AppBarLayout
@@ -47,7 +50,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.title}"
+                android:text="@={presoTask.inner.title}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

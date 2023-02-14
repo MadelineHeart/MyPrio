@@ -76,7 +76,7 @@ class PushNotificationWorker(
                 workManager.getWorkInfosByTag(digestGroupTag).get().isEmpty()
 
     fun sendDailyDigest() {
-        workManager.cancelAllWorkByTag(digestGroupTag)
+//        workManager.cancelAllWorkByTag(digestGroupTag)
         runBlocking {
             pushUseCase.fetchDailyDigest(System.currentTimeMillis()).forEach {
                 sendNotification(it)
