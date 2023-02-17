@@ -23,9 +23,51 @@ class PresoTask(private val context: Context,
     task.daysToEscalate,
     task.lastCompletedTimestamp
 ) {
-    val inner = InnerPresoTask(title)
+    // Move the rest of PresoTask in here, better construction
+    class InnerPresoTask(private val task: Task): BaseObservable() {
+        @get:Bindable
+        var title: String = task.title
+            set(value) {
+                field = value
+                task.title = value
+                notifyPropertyChanged(BR.title)
+            }
 
-    var displayTitle = MutableLiveData<String>(title)
+        @get:Bindable
+        var basePriority: Int = task.basePriority
+            set(value) {
+                field = value
+                task.basePriority = value
+                notifyPropertyChanged(BR.basePriority)
+            }
+
+        @get:Bindable
+        var description: String? = task.description
+        set(value) {
+            field = value
+            task.description = value
+            notifyPropertyChanged(BR.description)
+        }
+
+        @get:Bindable
+        var displayDaysToRepeat: String = task.daysToRepeat?.let { "$it" } ?: ""
+        set(value) {
+            field = value
+            task.daysToRepeat = value.toIntOrNull()
+            notifyPropertyChanged(BR.displayDaysToRepeat)
+        }
+
+        // TODO add exampleMode toggle to decide which priority to show, have "buildTask(): Task?" so it can verify
+        var daysToEscalate: Int? = task.daysToEscalate
+
+        var escalateBy: Int = task.escalateBy
+
+        // Variables that can't be directly changed
+        var id: UUID = task.id
+        var lastCompletedTimestamp: Long? = task.lastCompletedTimestamp
+    }
+
+    val inner = InnerPresoTask(task)
 
     var displayBasePriority: String
         get() = "$basePriority"
@@ -109,17 +151,5 @@ class PresoTask(private val context: Context,
             9 -> R.color.max_priority
             else -> R.color.no_priority
         }
-    }
-
-
-    // TRYING OUT OBSERVABLE HERE
-    class InnerPresoTask(title: String): BaseObservable() {
-        @get:Bindable
-        var title: String = title
-            set(value) {
-                field = value
-                notifyPropertyChanged(BR.title)
-            }
-
     }
 }

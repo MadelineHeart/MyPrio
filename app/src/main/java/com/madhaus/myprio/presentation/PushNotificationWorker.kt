@@ -24,31 +24,9 @@ class PushNotificationWorker(
     private lateinit var notifManager: NotificationManager
     private lateinit var workManager: WorkManager
 
-    private val channelId: String = "My_Prio_Notifs"
-    private val digestGroupTag = "My_Prio_Daily_Digest"
-
     init {
         BaseDaggerComponent.injector.inject(this)
-    }
-
-    override fun doWork(): Result {
         setupManagers()
-        if (shouldSend())
-            sendDailyDigest()
-
-        val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
-            .setInitialDelay(
-                pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
-                TimeUnit.MILLISECONDS
-            )
-            .addTag(digestGroupTag)
-            .build()
-
-        WorkManager
-            .getInstance(appContext)
-            .enqueue(pushWorkRequest)
-
-        return Result.success()
     }
 
     private fun setupManagers() {
@@ -71,12 +49,41 @@ class PushNotificationWorker(
         workManager = WorkManager.getInstance(appContext)
     }
 
+    override fun doWork(): Result {
+        if (shouldInit())
+            startPushWorker()
+        else if (shouldSend())
+            sendDailyDigest()
+
+        return Result.success()
+    }
+
+    private fun shouldInit(): Boolean = workerParams.tags.contains(INIT_PUSH_TAG)
+
+    private fun startPushWorker() {
+        // Should only have 1 periodic request running at a time
+        workManager.cancelAllWorkByTag(SEND_DIGEST_TAG)
+
+        val pushWorkRequest =
+            PeriodicWorkRequestBuilder<PushNotificationWorker>(1, TimeUnit.DAYS)
+                .setInitialDelay(
+                    pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
+                    TimeUnit.MILLISECONDS
+                )
+                .addTag(SEND_DIGEST_TAG)
+                .build()
+
+        workManager.enqueue(pushWorkRequest)
+    }
+
+
     private fun shouldSend(): Boolean =
-        workerParams.tags.contains(digestGroupTag) &&
-                workManager.getWorkInfosByTag(digestGroupTag).get().isEmpty()
+        workerParams.tags.contains(SEND_DIGEST_TAG)
+//                &&
+//                workManager.getWorkInfosByTag(SEND_DIGEST_TAG).get()
+//                    .none { it.state == WorkInfo.State.ENQUEUED }
 
     fun sendDailyDigest() {
-//        workManager.cancelAllWorkByTag(digestGroupTag)
         runBlocking {
             pushUseCase.fetchDailyDigest(System.currentTimeMillis()).forEach {
                 sendNotification(it)
@@ -87,17 +94,26 @@ class PushNotificationWorker(
     private fun sendNotification(notif: PresoNotification) {
         notifManager.notify(
             UUID.randomUUID().mostSignificantBits.toInt(),
-            notif.buildSystemNotif(appContext, digestGroupTag, channelId)
+            notif.buildSystemNotif(appContext, SEND_DIGEST_TAG, channelId)
         )
     }
 
     companion object {
+        private val channelId: String = "My_Prio_Notifs"
+
+        private val INIT_PUSH_TAG = "My_Prio_Init_Push"
+        private val SEND_DIGEST_TAG = "My_Prio_Daily_Digest"
+
         fun activate(context: Context) {
-            val pushWorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
-                .build()
             WorkManager
                 .getInstance(context)
-                .enqueue(pushWorkRequest)
+                .enqueue(
+                    OneTimeWorkRequestBuilder<PushNotificationWorker>()
+                        .addTag(INIT_PUSH_TAG)
+                        .build()
+                )
         }
     }
 }
+
+
