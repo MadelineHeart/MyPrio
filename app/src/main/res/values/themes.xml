@@ -22,7 +22,7 @@
         <item name="disabledSubText">@color/disabled_disclaimer_text_LM</item>
 
         <item name="activeButtonColor">@color/brand_purple</item>
-        <item name="disabledButtonColor">@color/sub_button_background_LM</item>
+        <item name="disabledButtonColor">@color/sub_button_background</item>
     </style>
 
     <style name="Theme.MyPrio.NoActionBar">

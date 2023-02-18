@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.madhaus.myprio.R
 import com.madhaus.myprio.dagger.BaseDaggerComponent
 import com.madhaus.myprio.databinding.SettingsViewBinding
+import com.madhaus.myprio.presentation.PushNotificationWorker
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,8 +55,11 @@ class SettingsFragment: Fragment() {
         val listener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             vm.setDailyDigestSendTime(hourOfDay, minute)
             binding.dailyDigestSendTime = vm.getDailyDigestSendTime()
+            // TODO shoul decouple this, maybe implement a flow on the app level?
+            PushNotificationWorker.activate(requireContext())
         }
-        TimePickerDialog(context, listener, 0, 0, true).show()
+        val current = vm.getDailyDigestSendTimeSplit()
+        TimePickerDialog(context, listener, current.first, current.second, true).show()
     }
 
     private fun setupToolbar() {

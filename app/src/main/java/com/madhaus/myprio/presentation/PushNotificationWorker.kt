@@ -65,7 +65,8 @@ class PushNotificationWorker(
         workManager.cancelAllWorkByTag(SEND_DIGEST_TAG)
 
         val pushWorkRequest =
-            PeriodicWorkRequestBuilder<PushNotificationWorker>(1, TimeUnit.DAYS)
+            PeriodicWorkRequestBuilder<PushNotificationWorker>(15, TimeUnit.MINUTES)
+//                .setInitialDelay(30, TimeUnit.SECONDS)
                 .setInitialDelay(
                     pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
                     TimeUnit.MILLISECONDS
@@ -73,7 +74,10 @@ class PushNotificationWorker(
                 .addTag(SEND_DIGEST_TAG)
                 .build()
 
-        workManager.enqueue(pushWorkRequest)
+//        workManager.enqueue(pushWorkRequest)
+        workManager.enqueueUniquePeriodicWork(SEND_DIGEST_TAG,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            pushWorkRequest)
     }
 
 

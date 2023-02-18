@@ -22,7 +22,7 @@
         <item name="disabledSubText">@color/disabled_disclaimer_text_DM</item>
 
         <item name="activeButtonColor">@color/brand_purple</item>
-        <item name="disabledButtonColor">@color/sub_button_background_DM</item>
+        <item name="disabledButtonColor">@color/sub_button_background</item>
     </style>
 
     <style name="Theme.MyPrio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -61,7 +61,7 @@
     </style>
 
     <style name="SubButton">
-        <item name="android:backgroundTint">@color/sub_button_background_DM</item>
+        <item name="android:backgroundTint">@color/sub_button_background</item>
         <item name="android:textColor">@color/main_text_DM</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>

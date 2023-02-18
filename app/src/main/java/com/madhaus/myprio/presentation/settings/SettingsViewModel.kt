@@ -17,6 +17,9 @@ class SettingsViewModel
         val minutes = String.format("%2s", "${time.second}").replace(' ', '0')
         return "${time.first}:$minutes"
     }
+
+    fun getDailyDigestSendTimeSplit(): Pair<Int, Int> = settingsUseCase.getDailyDigestSendTime()
+
     fun setDailyDigestSendTime(hours: Int, minutes: Int) =
         settingsUseCase.setDailyDigestSendTime(hours, minutes)
 }

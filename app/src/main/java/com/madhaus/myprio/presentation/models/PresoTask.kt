@@ -24,7 +24,8 @@ class PresoTask(private val context: Context,
     task.lastCompletedTimestamp
 ) {
     // Move the rest of PresoTask in here, better construction
-    class InnerPresoTask(private val task: Task): BaseObservable() {
+    class InnerPresoTask(private val task: Task,
+                         private val isExampleCell: Boolean = false): BaseObservable() {
         @get:Bindable
         var title: String = task.title
             set(value) {
@@ -34,11 +35,11 @@ class PresoTask(private val context: Context,
             }
 
         @get:Bindable
-        var basePriority: Int = task.basePriority
+        var displayBasePriority: String = "${task.basePriority}"
             set(value) {
                 field = value
-                task.basePriority = value
-                notifyPropertyChanged(BR.basePriority)
+                task.basePriority = value.toIntOrNull() ?: -1
+                notifyPropertyChanged(BR.displayBasePriority)
             }
 
         @get:Bindable
@@ -57,14 +58,25 @@ class PresoTask(private val context: Context,
             notifyPropertyChanged(BR.displayDaysToRepeat)
         }
 
-        // TODO add exampleMode toggle to decide which priority to show, have "buildTask(): Task?" so it can verify
-        var daysToEscalate: Int? = task.daysToEscalate
+        @get:Bindable
+        var displayDaysToEscalate: String = task.daysToEscalate?.let { "$it" } ?: ""
+        set(value) {
+            field = value
+            task.daysToEscalate = value.toIntOrNull()
+            notifyPropertyChanged(BR.displayDaysToEscalate)
+        }
 
-        var escalateBy: Int = task.escalateBy
+        @get:Bindable
+        var displayEscalateBy: String = "${task.escalateBy}"
+        set(value) {
+            field = value
+            task.escalateBy = value.toIntOrNull() ?: -1
+            notifyPropertyChanged(BR.displayEscalateBy)
+        }
 
-        // Variables that can't be directly changed
-        var id: UUID = task.id
-        var lastCompletedTimestamp: Long? = task.lastCompletedTimestamp
+        fun buildTask(): Task? {
+            return if (task.verify()) task else null
+        }
     }
 
     val inner = InnerPresoTask(task)
