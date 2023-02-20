@@ -50,23 +50,30 @@ class PushNotificationWorker(
     }
 
     override fun doWork(): Result {
-        if (shouldInit())
-            startPushWorker()
-        else if (shouldSend())
+        if (shouldSend())
             sendDailyDigest()
+        startPushWorker()
 
         return Result.success()
     }
 
-    private fun shouldInit(): Boolean = workerParams.tags.contains(INIT_PUSH_TAG)
+    private fun shouldSend(): Boolean = workerParams.tags.contains(SEND_DIGEST_TAG)
 
     private fun startPushWorker() {
         // Should only have 1 periodic request running at a time
-        workManager.cancelAllWorkByTag(SEND_DIGEST_TAG)
+//        workManager.cancelAllWorkByTag(SEND_DIGEST_TAG)
+
+//        val pushWorkRequest =
+//            PeriodicWorkRequestBuilder<PushNotificationWorker>(15, TimeUnit.MINUTES)
+//                .setInitialDelay(
+//                    pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
+//                    TimeUnit.MILLISECONDS
+//                )
+//                .addTag(SEND_DIGEST_TAG)
+//                .build()
 
         val pushWorkRequest =
-            PeriodicWorkRequestBuilder<PushNotificationWorker>(15, TimeUnit.MINUTES)
-//                .setInitialDelay(30, TimeUnit.SECONDS)
+            OneTimeWorkRequestBuilder<PushNotificationWorker>()
                 .setInitialDelay(
                     pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
                     TimeUnit.MILLISECONDS
@@ -75,17 +82,12 @@ class PushNotificationWorker(
                 .build()
 
 //        workManager.enqueue(pushWorkRequest)
-        workManager.enqueueUniquePeriodicWork(SEND_DIGEST_TAG,
-            ExistingPeriodicWorkPolicy.REPLACE,
+        workManager.enqueueUniqueWork(SEND_DIGEST_TAG,
+            ExistingWorkPolicy.REPLACE,
             pushWorkRequest)
     }
 
 
-    private fun shouldSend(): Boolean =
-        workerParams.tags.contains(SEND_DIGEST_TAG)
-//                &&
-//                workManager.getWorkInfosByTag(SEND_DIGEST_TAG).get()
-//                    .none { it.state == WorkInfo.State.ENQUEUED }
 
     fun sendDailyDigest() {
         runBlocking {

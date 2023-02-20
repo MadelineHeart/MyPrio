@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="presoTask"
             type="com.madhaus.myprio.presentation.models.PresoTask" />
+
         <variable
             name="vm"
             type="com.madhaus.myprio.presentation.taskmanager.TaskManagerViewModel" />
@@ -27,12 +29,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorOnPrimary"
-            android:padding="16dp">
+            android:padding="8dp">
 
-            <include
-                android:id="@+id/example_task_cell"
-                layout="@layout/task_item"
-                app:presoTask="@={presoTask}"/>
+            <FrameLayout
+                android:id="@+id/example_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dashed_border_box"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/example_task_cell"
+                    layout="@layout/task_item"
+                    app:presoTask="@={presoTask}" />
+
+            </FrameLayout>
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -46,23 +58,27 @@
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Title . . ."
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:hint="Title . . ."
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.inner.title}"
+                android:text="@={presoTask.title}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/example_task_cell" />
+                app:layout_constraintTop_toBottomOf="@id/example_box" />
 
             <EditText
                 android:id="@+id/description"
                 style="@style/EditTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:hint="Description . . ."
-                android:text="@={presoTask.inner.description}"
+                android:text="@={presoTask.description}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -73,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 android:text="Initial Priority:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description" />
@@ -82,11 +99,12 @@
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.inner.displayBasePriority}"
+                android:text="@={presoTask.displayBasePriority}"
                 app:layout_constraintBottom_toBottomOf="@id/basePriorityDirections"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
@@ -98,6 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 android:text="Days to task resets:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/basePriorityDirections" />
@@ -107,11 +126,12 @@
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.inner.displayDaysToRepeat}"
+                android:text="@={presoTask.displayDaysToRepeat}"
                 app:layout_constraintBottom_toBottomOf="@id/repeatDurationDirections"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
@@ -123,6 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 android:text="Days to task escalates:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/repeatDurationDirections" />
@@ -132,11 +153,12 @@
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.inner.displayDaysToEscalate}"
+                android:text="@={presoTask.displayDaysToEscalate}"
                 app:layout_constraintBottom_toBottomOf="@id/escalateDurationDirections"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
@@ -148,6 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 android:text="Escalate priority by:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/escalateDurationDirections" />
@@ -157,13 +180,14 @@
                 style="@style/EditTextInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:digits="123456789"
                 android:gravity="center_horizontal"
                 android:inputType="number"
                 android:maxLength="1"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@={presoTask.inner.displayEscalateBy}"
+                android:text="@={presoTask.displayEscalateBy}"
                 app:layout_constraintBottom_toBottomOf="@id/escalateAmountDirections"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
@@ -174,6 +198,7 @@
                 style="@style/MainButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="SAVE"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -185,6 +210,7 @@
                 style="@style/SubButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:text="CANCEL"
                 app:layout_constraintBottom_toBottomOf="parent"

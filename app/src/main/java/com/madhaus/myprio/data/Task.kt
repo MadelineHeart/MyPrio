@@ -24,7 +24,7 @@ open class Task(
 
         val timeDelta = (currentTime - getRedoTimestamp())
         if (timeDelta < 0) return 0 // Not yet time to redo
-        val daysSinceRepeat = max((timeDelta / millisInDay).toInt(), 1)
+        val daysSinceRepeat = max((timeDelta / millisInDay).toInt(), 0)
         val numEscalations = (daysSinceRepeat / daysToEscalate) * escalateBy
         return min(9, basePriority + numEscalations)
     }

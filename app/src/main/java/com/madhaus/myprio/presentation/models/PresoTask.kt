@@ -12,121 +12,85 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 /** Put all purely view concerned functions here **/
-class PresoTask(private val context: Context,
-                task: Task) : Task(
-    task.id,
-    task.title,
-    task.basePriority,
-    task.description,
-    task.daysToRepeat,
-    task.escalateBy,
-    task.daysToEscalate,
-    task.lastCompletedTimestamp
-) {
-    // Move the rest of PresoTask in here, better construction
-    class InnerPresoTask(private val task: Task,
-                         private val isExampleCell: Boolean = false): BaseObservable() {
-        @get:Bindable
-        var title: String = task.title
-            set(value) {
-                field = value
-                task.title = value
-                notifyPropertyChanged(BR.title)
-            }
+class PresoTask(
+    private val task: Task,
+    private val context: Context,
+    val isExampleCell: Boolean = false
+) : BaseObservable() {
+    @get:Bindable
+    var title: String = task.title
+        set(value) {
+            field = value
+            task.title = value
+            notifyPropertyChanged(BR.title)
+        }
 
-        @get:Bindable
-        var displayBasePriority: String = "${task.basePriority}"
-            set(value) {
-                field = value
-                task.basePriority = value.toIntOrNull() ?: -1
-                notifyPropertyChanged(BR.displayBasePriority)
-            }
+    @get:Bindable
+    var displayBasePriority: String = "${task.basePriority}"
+        set(value) {
+            field = value
+            task.basePriority = value.toIntOrNull() ?: -1
+            notifyPropertyChanged(BR.displayBasePriority)
+        }
 
-        @get:Bindable
-        var description: String? = task.description
+    @get:Bindable
+    var description: String? = task.description
         set(value) {
             field = value
             task.description = value
             notifyPropertyChanged(BR.description)
         }
 
-        @get:Bindable
-        var displayDaysToRepeat: String = task.daysToRepeat?.let { "$it" } ?: ""
+    @get:Bindable
+    var displayDaysToRepeat: String = task.daysToRepeat?.let { "$it" } ?: ""
         set(value) {
             field = value
             task.daysToRepeat = value.toIntOrNull()
             notifyPropertyChanged(BR.displayDaysToRepeat)
         }
 
-        @get:Bindable
-        var displayDaysToEscalate: String = task.daysToEscalate?.let { "$it" } ?: ""
+    @get:Bindable
+    var displayDaysToEscalate: String = task.daysToEscalate?.let { "$it" } ?: ""
         set(value) {
             field = value
             task.daysToEscalate = value.toIntOrNull()
             notifyPropertyChanged(BR.displayDaysToEscalate)
         }
 
-        @get:Bindable
-        var displayEscalateBy: String = "${task.escalateBy}"
+    @get:Bindable
+    var displayEscalateBy: String = "${task.escalateBy}"
         set(value) {
             field = value
             task.escalateBy = value.toIntOrNull() ?: -1
             notifyPropertyChanged(BR.displayEscalateBy)
         }
 
-        fun buildTask(): Task? {
-            return if (task.verify()) task else null
-        }
+    fun buildTask(): Task? {
+        return if (task.verify()) task else null
     }
-
-    val inner = InnerPresoTask(task)
-
-    var displayBasePriority: String
-        get() = "$basePriority"
-        set(value) {
-            basePriority = value.toIntOrNull() ?: 1
-        }
-
-    var displayDaysToRepeat: String
-        get() = daysToRepeat?.let { "$it" } ?: ""
-        set(value) {
-            daysToRepeat = value.toIntOrNull()
-        }
-
-    var displayDaysToEscalate: String
-        get() = daysToEscalate?.let { "$it" } ?: ""
-        set(value) {
-            daysToEscalate = value.toIntOrNull()
-        }
-
-    var displayEscalateBy: String
-        get() = "$escalateBy"
-        set(value) {
-            escalateBy = value.toIntOrNull() ?: 0
-        }
 
     fun getLastCompletedDate(): String {
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        return lastCompletedTimestamp?.let { "Last completed on: ${formatter.format(Date(it))}" }
+        return task.lastCompletedTimestamp?.let { "Last completed on: ${formatter.format(Date(it))}" }
             ?: "Malformed Task"
     }
 
     fun getActivationTime(forTime: Long): String {
         val millisInDay: Long = TimeUnit.DAYS.toMillis(1)
-        val repeatTimestamp = millisInDay * (daysToRepeat ?: 0)
-        val timeDelta = forTime - (lastCompletedTimestamp ?: 0)
+        val repeatTimestamp = millisInDay * (task.daysToRepeat ?: 0)
+        val timeDelta = forTime - (task.lastCompletedTimestamp ?: 0)
         return if (repeatTimestamp > timeDelta) {
             "${TimeUnit.MILLISECONDS.toDays(repeatTimestamp - timeDelta) + 1} days till reactivation"
         } else {
             val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-            lastCompletedTimestamp?.let { "Activated on: ${formatter.format(Date(it + repeatTimestamp))}" }
+            task.lastCompletedTimestamp?.let { "Activated on: ${formatter.format(Date(it + repeatTimestamp))}" }
                 ?: "Malformed Task"
         }
     }
 
     fun getItemBackground(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledViewBackground, 0)
         else
             theme.getColor(R.styleable.SharedTheme_activeViewBackground, 0)
@@ -136,7 +100,7 @@ class PresoTask(private val context: Context,
 
     fun getItemMainTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledMainText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_mainText, 0)
@@ -146,7 +110,7 @@ class PresoTask(private val context: Context,
 
     fun getItemSubTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0)
             theme.getColor(R.styleable.SharedTheme_disabledSubText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_subText, 0)
@@ -154,8 +118,14 @@ class PresoTask(private val context: Context,
         return output
     }
 
+    fun getPriority(forTime: Long): Int =
+        if (isExampleCell)
+            task.basePriority
+        else
+            task.getPriority(forTime)
+
     fun getPriorityColor(forTime: Long): Int {
-        return when (getPriority(forTime)) {
+        return when (task.getPriority(forTime)) {
             0 -> R.color.no_priority
             in 1..3 -> R.color.low_priority
             in 4..6 -> R.color.medium_priority

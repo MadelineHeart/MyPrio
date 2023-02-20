@@ -37,7 +37,7 @@ class TaskFeedAdapter(private val context: Context) :
         RecyclerView.ViewHolder(itemRowBinding.root) {
 
         fun bind(newTask: Task) {
-            itemRowBinding.presoTask = PresoTask(context, newTask)
+            itemRowBinding.presoTask = PresoTask(newTask, context)
             itemRowBinding.executePendingBindings()
         }
     }

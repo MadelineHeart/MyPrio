@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -30,7 +32,7 @@ class TaskManagerFragment : Fragment() {
         BaseDaggerComponent.injector.inject(this)
 
         val binding = TaskManagerViewBinding.inflate(inflater, container, false)
-        binding.presoTask = PresoTask(requireContext(), vm.getTask(arguments?.getSerializable("UUID") as? UUID))
+        binding.presoTask = PresoTask(vm.getTask(arguments?.getSerializable("UUID") as? UUID), requireContext(), true)
         binding.vm = vm
         _binding = binding
 
@@ -41,12 +43,16 @@ class TaskManagerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         attachListeners()
         setupToolbar()
+        setupExampleCell()
     }
 
     private fun attachListeners() {
         binding.toolbar.setOnMenuItemClickListener { handleMenuItem(it) }
 
-        binding.saveButton.setOnClickListener { _ -> binding.presoTask?.let { vm.saveAndExit(it) } }
+        binding.description.doOnTextChanged { _, _, _, count ->
+            binding.exampleTaskCell.expanded.visibility = if (count > 0) View.VISIBLE else View.GONE }
+
+        binding.saveButton.setOnClickListener { _ -> binding.presoTask?.buildTask()?.let { vm.saveAndExit(it) } }
         binding.cancelButton.setOnClickListener { _ -> vm.cancelAndExit() }
     }
 
@@ -56,10 +62,15 @@ class TaskManagerFragment : Fragment() {
         binding.toolbar.setupWithNavController(findNavController())
     }
 
+    private fun setupExampleCell() {
+        binding.exampleTaskCell.editButton.visibility = View.GONE
+        binding.exampleTaskCell.doneButton.visibility = View.GONE
+    }
+
     private fun handleMenuItem(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_delete -> {
-                binding.presoTask?.id?.let { vm.deleteTask(it) }
+                binding.presoTask?.buildTask()?.id?.let { vm.deleteTask(it) }
                 true
             } else ->
                 false

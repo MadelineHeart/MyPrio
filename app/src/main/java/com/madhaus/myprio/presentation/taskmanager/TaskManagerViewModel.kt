@@ -35,7 +35,7 @@ class TaskManagerViewModelImpl(
 
     override fun getTask(taskId: UUID?): Task {
         val task = taskUseCase.fetchOrCreateTask(taskId)
-        taskLD.postValue(PresoTask(context, task))
+        taskLD.postValue(PresoTask(task, context))
         return taskUseCase.fetchOrCreateTask(taskId)
     }
 
