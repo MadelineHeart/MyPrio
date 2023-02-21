@@ -28,7 +28,7 @@
 
     <color name="main_text_LM">#FF10081E</color>
     <color name="disabled_main_text_LM">#FF8686A5</color>
-    <color name="disclaimer_text_LM">#FF10081E</color>
+    <color name="disclaimer_text_LM">#FF322A3F</color>
     <color name="disabled_disclaimer_text_LM">#FFC1C1D1</color>
 
     <!-- Dark Mode Colors -->
@@ -38,6 +38,6 @@
 
     <color name="main_text_DM">#FFEEEEEE</color>
     <color name="disabled_main_text_DM">#FF3B4356</color>
-    <color name="disclaimer_text_DM">#FFEEEEEE</color>
-    <color name="disabled_disclaimer_text_DM">#FF3B4356</color>
+    <color name="disclaimer_text_DM">#FFCCCCCC</color>
+    <color name="disabled_disclaimer_text_DM">#FF2A3245</color>
 </resources>

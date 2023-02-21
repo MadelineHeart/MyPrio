@@ -47,6 +47,9 @@ class PresoTask(
             field = value
             task.daysToRepeat = value.toIntOrNull()
             notifyPropertyChanged(BR.displayDaysToRepeat)
+
+            displayActivationDate = getActivationTime(System.currentTimeMillis())
+            notifyPropertyChanged(BR.displayActivationDate)
         }
 
     @get:Bindable
@@ -65,17 +68,33 @@ class PresoTask(
             notifyPropertyChanged(BR.displayEscalateBy)
         }
 
+    @get:Bindable
+    var displayLastCompleted: String = getLastCompletedDate()
+
+    @get:Bindable
+    var displayActivationDate: String = getActivationTime(System.currentTimeMillis())
+
     fun buildTask(): Task? {
         return if (task.verify()) task else null
     }
 
-    fun getLastCompletedDate(): String {
+    private fun getLastCompletedDate(): String {
+        if (isExampleCell) return getExampleLastCompleted()
+
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         return task.lastCompletedTimestamp?.let { "Last completed on: ${formatter.format(Date(it))}" }
             ?: "Malformed Task"
     }
 
-    fun getActivationTime(forTime: Long): String {
+    // Example defaults time completed to now
+    private fun getExampleLastCompleted(): String {
+        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        return "Last completed on: ${formatter.format(Date(task.lastCompletedTimestamp ?: System.currentTimeMillis()))}"
+    }
+
+    private fun getActivationTime(forTime: Long): String {
+        if (isExampleCell) return getExampleActivationTime(forTime)
+
         val millisInDay: Long = TimeUnit.DAYS.toMillis(1)
         val repeatTimestamp = millisInDay * (task.daysToRepeat ?: 0)
         val timeDelta = forTime - (task.lastCompletedTimestamp ?: 0)
@@ -88,9 +107,26 @@ class PresoTask(
         }
     }
 
+    private fun getExampleActivationTime(forTime: Long): String {
+        if (task.daysToRepeat == null)
+            return ""
+
+        val millisInDay: Long = TimeUnit.DAYS.toMillis(1)
+        val repeatTimestamp = millisInDay * (task.daysToRepeat ?: 0)
+        val timeDelta = forTime - (task.lastCompletedTimestamp ?: 0)
+        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+
+        return if (repeatTimestamp > timeDelta) {
+            "Activated on: ${formatter.format(Date(System.currentTimeMillis() + repeatTimestamp))}"
+        } else {
+            task.lastCompletedTimestamp?.let { "Activated on: ${formatter.format(Date(it + repeatTimestamp))}" }
+                ?: "Activated on: ${formatter.format(Date(System.currentTimeMillis() + repeatTimestamp))}"
+        }
+    }
+
     fun getItemBackground(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (task.getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0 && !isExampleCell)
             theme.getColor(R.styleable.SharedTheme_disabledViewBackground, 0)
         else
             theme.getColor(R.styleable.SharedTheme_activeViewBackground, 0)
@@ -100,7 +136,7 @@ class PresoTask(
 
     fun getItemMainTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (task.getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0 && !isExampleCell)
             theme.getColor(R.styleable.SharedTheme_disabledMainText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_mainText, 0)
@@ -110,7 +146,7 @@ class PresoTask(
 
     fun getItemSubTextColor(forTime: Long): Int {
         val theme = context.obtainStyledAttributes(R.styleable.SharedTheme)
-        val output = if (task.getPriority(forTime) == 0)
+        val output = if (task.getPriority(forTime) == 0 && !isExampleCell)
             theme.getColor(R.styleable.SharedTheme_disabledSubText, 0)
         else
             theme.getColor(R.styleable.SharedTheme_subText, 0)

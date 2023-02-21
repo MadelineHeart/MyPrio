@@ -52,7 +52,7 @@ class TaskManagerFragment : Fragment() {
         binding.description.doOnTextChanged { _, _, _, count ->
             binding.exampleTaskCell.expanded.visibility = if (count > 0) View.VISIBLE else View.GONE }
 
-        binding.saveButton.setOnClickListener { _ -> binding.presoTask?.buildTask()?.let { vm.saveAndExit(it) } }
+        binding.saveButton.setOnClickListener { _ -> binding.presoTask?.let { vm.saveAndExit(it) } }
         binding.cancelButton.setOnClickListener { _ -> vm.cancelAndExit() }
     }
 

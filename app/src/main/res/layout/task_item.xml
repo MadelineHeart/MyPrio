@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="presoTask"
             type="com.madhaus.myprio.presentation.models.PresoTask" />
@@ -42,8 +43,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:hint="Input a title. . ."
             android:text="@{presoTask.title}"
             android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
+            android:textColorHint="@color/max_priority"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"
             app:layout_constraintTop_toTopOf="parent" />
@@ -55,8 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{presoTask.getActivationTime(System.currentTimeMillis())}"
+            android:hint="Input a time to activate. . ."
+            android:text="@{presoTask.displayActivationDate}"
             android:textColor="@{presoTask.getItemMainTextColor(System.currentTimeMillis())}"
+            android:textColorHint="@color/max_priority"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -69,7 +74,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:paddingBottom="8dp"
-            android:text="@{presoTask.lastCompletedDate}"
+            android:text="@={presoTask.displayLastCompleted}"
             android:textColor="@{presoTask.getItemSubTextColor(System.currentTimeMillis())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priorityIcon"

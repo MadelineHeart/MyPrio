@@ -20,7 +20,7 @@ interface TaskManagerViewModel {
 
     fun getTask(taskId: UUID?): Task
     fun deleteTask(taskId: UUID): Boolean
-    fun saveAndExit(toSave: Task)
+    fun saveAndExit(toSave: PresoTask)
     fun cancelAndExit()
 }
 
@@ -48,16 +48,17 @@ class TaskManagerViewModelImpl(
         return result
     }
 
-    override fun saveAndExit(toSave: Task) {
-        // If a new task, set proper identifiers
-        if (toSave.lastCompletedTimestamp == null)
-            toSave.lastCompletedTimestamp =
-                TimeUtils.normalizeToMidnight(System.currentTimeMillis())
+    override fun saveAndExit(toSave: PresoTask) {
+        val task = toSave.buildTask()
+        task?.let {
+            // If a new task, set proper identifiers
+            if (it.lastCompletedTimestamp == null)
+                it.lastCompletedTimestamp =
+                    TimeUtils.normalizeToMidnight(System.currentTimeMillis())
 
-        if (toSave.verify())
-            saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(toSave))
-        else
-            errorFlow.tryEmit("Task is malformed, cannot save.")
+            saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(it))
+        }
+        errorFlow.tryEmit("Task needs more info, cannot save.")
     }
 
     override fun cancelAndExit() {
