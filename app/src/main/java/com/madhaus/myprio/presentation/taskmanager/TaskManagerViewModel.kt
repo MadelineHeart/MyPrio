@@ -19,7 +19,7 @@ interface TaskManagerViewModel {
     val errorFlow: Flow<String>
 
     fun getTask(taskId: UUID?): Task
-    fun deleteTask(taskId: UUID): Boolean
+    fun deleteTask(toDelete: PresoTask): Boolean
     fun saveAndExit(toSave: PresoTask)
     fun cancelAndExit()
 }
@@ -39,8 +39,8 @@ class TaskManagerViewModelImpl(
         return taskUseCase.fetchOrCreateTask(taskId)
     }
 
-    override fun deleteTask(taskId: UUID): Boolean {
-        val result = taskUseCase.deleteTask(taskId)
+    override fun deleteTask(toDelete: PresoTask): Boolean {
+        val result = toDelete.buildTask()?.let { taskUseCase.deleteTask(it.id) } ?: true
         // If we deleted, shouldn't remain on edit page
         if (result) {
             cancelAndExit()

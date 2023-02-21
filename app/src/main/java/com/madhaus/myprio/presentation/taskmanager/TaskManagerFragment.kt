@@ -1,5 +1,6 @@
 package com.madhaus.myprio.presentation.taskmanager
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -70,11 +71,22 @@ class TaskManagerFragment : Fragment() {
     private fun handleMenuItem(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_delete -> {
-                binding.presoTask?.buildTask()?.id?.let { vm.deleteTask(it) }
+                showDeleteDialog()
                 true
             } else ->
                 false
         }
+    }
+
+    private fun showDeleteDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Are you sure you want to delete this task?")
+            .setPositiveButton("DELETE") { dialog, _ ->
+                binding.presoTask?.let { vm.deleteTask(it) }
+                dialog.dismiss()
+            }
+            .setNegativeButton("DISMISS") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     override fun onDestroyView() {
