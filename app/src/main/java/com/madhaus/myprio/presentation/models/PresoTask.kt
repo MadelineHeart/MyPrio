@@ -7,13 +7,14 @@ import androidx.lifecycle.MutableLiveData
 import com.madhaus.myprio.R
 import com.madhaus.myprio.BR
 import com.madhaus.myprio.data.Task
+import com.madhaus.myprio.presentation.ViewUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 /** Put all purely view concerned functions here **/
 class PresoTask(
-    private val task: Task,
+    val task: Task,
     private val context: Context,
     val isExampleCell: Boolean = false
 ) : BaseObservable() {
@@ -31,7 +32,15 @@ class PresoTask(
             field = value
             task.basePriority = value.toIntOrNull() ?: -1
             notifyPropertyChanged(BR.displayBasePriority)
+
+            displayPriorityIcon =
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+            notifyPropertyChanged(BR.displayPriorityIcon)
         }
+
+    @get:Bindable
+    var displayPriorityIcon: Int =
+        ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
 
     @get:Bindable
     var description: String? = task.description
@@ -50,6 +59,10 @@ class PresoTask(
 
             displayActivationDate = getActivationTime(System.currentTimeMillis())
             notifyPropertyChanged(BR.displayActivationDate)
+
+            displayPriorityIcon =
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+            notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
     @get:Bindable
@@ -58,6 +71,10 @@ class PresoTask(
             field = value
             task.daysToEscalate = value.toIntOrNull()
             notifyPropertyChanged(BR.displayDaysToEscalate)
+
+            displayPriorityIcon =
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+            notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
     @get:Bindable
@@ -66,6 +83,10 @@ class PresoTask(
             field = value
             task.escalateBy = value.toIntOrNull() ?: -1
             notifyPropertyChanged(BR.displayEscalateBy)
+
+            displayPriorityIcon =
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+            notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
     @get:Bindable
@@ -73,10 +94,6 @@ class PresoTask(
 
     @get:Bindable
     var displayActivationDate: String = getActivationTime(System.currentTimeMillis())
-
-    fun buildTask(): Task? {
-        return if (task.verify()) task else null
-    }
 
     private fun getLastCompletedDate(): String {
         if (isExampleCell) return getExampleLastCompleted()
@@ -154,20 +171,13 @@ class PresoTask(
         return output
     }
 
-    fun getPriority(forTime: Long): Int =
-        if (isExampleCell)
+    private fun getPriority(forTime: Long): Int {
+        val hasActivated = task.lastCompletedTimestamp?.let {
+            forTime > (it + TimeUnit.DAYS.toMillis((task.daysToRepeat ?: 0).toLong()))
+        } ?: false
+        return if (isExampleCell && !hasActivated)
             task.basePriority
         else
             task.getPriority(forTime)
-
-    fun getPriorityColor(forTime: Long): Int {
-        return when (task.getPriority(forTime)) {
-            0 -> R.color.no_priority
-            in 1..3 -> R.color.low_priority
-            in 4..6 -> R.color.medium_priority
-            in 7..8 -> R.color.high_priority
-            9 -> R.color.max_priority
-            else -> R.color.no_priority
-        }
     }
 }

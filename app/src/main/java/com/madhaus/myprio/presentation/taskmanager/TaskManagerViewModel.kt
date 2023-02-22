@@ -40,7 +40,7 @@ class TaskManagerViewModelImpl(
     }
 
     override fun deleteTask(toDelete: PresoTask): Boolean {
-        val result = toDelete.buildTask()?.let { taskUseCase.deleteTask(it.id) } ?: true
+        val result = taskUseCase.deleteTask(toDelete.task.id)
         // If we deleted, shouldn't remain on edit page
         if (result) {
             cancelAndExit()
@@ -49,16 +49,15 @@ class TaskManagerViewModelImpl(
     }
 
     override fun saveAndExit(toSave: PresoTask) {
-        val task = toSave.buildTask()
-        task?.let {
-            // If a new task, set proper identifiers
-            if (it.lastCompletedTimestamp == null)
-                it.lastCompletedTimestamp =
-                    TimeUtils.normalizeToMidnight(System.currentTimeMillis())
+        // If a new task, set proper identifiers
+        if (toSave.task.lastCompletedTimestamp == null)
+            toSave.task.lastCompletedTimestamp =
+                TimeUtils.normalizeToMidnight(System.currentTimeMillis())
 
-            saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(it))
-        }
-        errorFlow.tryEmit("Task needs more info, cannot save.")
+        if (toSave.task.verify())
+            saveAndExitFlow.tryEmit(taskUseCase.makeOrUpdateTask(toSave.task))
+        else
+            errorFlow.tryEmit("Task needs more info, cannot save.")
     }
 
     override fun cancelAndExit() {

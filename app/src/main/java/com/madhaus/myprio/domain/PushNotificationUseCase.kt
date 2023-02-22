@@ -18,7 +18,6 @@ class PushNotificationUseCaseImpl(private val taskUseCase: TaskUseCase,
             .filter { it.getPriority(forTime) >= settingsRepository.getDigestMinimumPriority() }
             .map {
                 PresoNotification(
-                    R.drawable.ic_round_add_24,
                     it.title,
                     it.getPriority(forTime),
                     it.description

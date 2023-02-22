@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.madhaus.myprio.presentation.MainActivity
+import com.madhaus.myprio.presentation.ViewUtils
 
 class PresoNotification(
-    val iconRes: Int,
     val title: String,
     val taskPriority: Int,
     val description: String? = null
@@ -16,7 +16,7 @@ class PresoNotification(
     fun buildSystemNotif(context: Context, groupTag: String, channelId: String): Notification {
         // Necessary Attributes
         val builder = Notification.Builder(context)
-            .setSmallIcon(iconRes)
+            .setSmallIcon(ViewUtils.getIconForPriority(taskPriority))
             .setPriority(Notification.PRIORITY_MAX)
             .setContentTitle(title)
         val intent = Intent(context, MainActivity::class.java).apply {
