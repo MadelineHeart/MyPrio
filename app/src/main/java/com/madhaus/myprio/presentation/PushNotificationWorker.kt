@@ -60,18 +60,6 @@ class PushNotificationWorker(
     private fun shouldSend(): Boolean = workerParams.tags.contains(SEND_DIGEST_TAG)
 
     private fun startPushWorker() {
-        // Should only have 1 periodic request running at a time
-//        workManager.cancelAllWorkByTag(SEND_DIGEST_TAG)
-
-//        val pushWorkRequest =
-//            PeriodicWorkRequestBuilder<PushNotificationWorker>(15, TimeUnit.MINUTES)
-//                .setInitialDelay(
-//                    pushUseCase.getTimeToNextDigest(System.currentTimeMillis()),
-//                    TimeUnit.MILLISECONDS
-//                )
-//                .addTag(SEND_DIGEST_TAG)
-//                .build()
-
         val pushWorkRequest =
             OneTimeWorkRequestBuilder<PushNotificationWorker>()
                 .setInitialDelay(
@@ -81,7 +69,6 @@ class PushNotificationWorker(
                 .addTag(SEND_DIGEST_TAG)
                 .build()
 
-//        workManager.enqueue(pushWorkRequest)
         workManager.enqueueUniqueWork(SEND_DIGEST_TAG,
             ExistingWorkPolicy.REPLACE,
             pushWorkRequest)

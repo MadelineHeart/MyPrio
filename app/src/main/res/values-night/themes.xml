@@ -23,6 +23,8 @@
 
         <item name="activeButtonColor">@color/brand_purple</item>
         <item name="disabledButtonColor">@color/sub_button_background</item>
+
+        <item name="priority_0_icon">@drawable/ic_prio_0_dm</item>
     </style>
 
     <style name="Theme.MyPrio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -53,11 +55,12 @@
     </style>
 
     <style name="MainButton">
+        <item name="colorOnPrimary">@color/brand_purple</item>
         <item name="android:backgroundTint">?attr/activeButtonColor</item>
         <item name="android:textColor">@color/main_text_DM</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:letterSpacing">0.5</item>
+        <item name="android:letterSpacing">0.3</item>
     </style>
 
     <style name="SubButton">
@@ -65,6 +68,6 @@
         <item name="android:textColor">@color/main_text_DM</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:letterSpacing">0.5</item>
+        <item name="android:letterSpacing">0.3</item>
     </style>
 </resources>

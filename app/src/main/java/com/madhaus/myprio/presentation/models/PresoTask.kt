@@ -1,6 +1,7 @@
 package com.madhaus.myprio.presentation.models
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
@@ -34,13 +35,17 @@ class PresoTask(
             notifyPropertyChanged(BR.displayBasePriority)
 
             displayPriorityIcon =
-                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()), context)
             notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
     @get:Bindable
-    var displayPriorityIcon: Int =
-        ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+    var displayPriorityIcon: Drawable? =
+        ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()), context)
+
+//    @get:Bindable
+//    var displayPriorityIcon: Int =
+//        ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
 
     @get:Bindable
     var description: String? = task.description
@@ -61,7 +66,7 @@ class PresoTask(
             notifyPropertyChanged(BR.displayActivationDate)
 
             displayPriorityIcon =
-                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()), context)
             notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
@@ -73,7 +78,7 @@ class PresoTask(
             notifyPropertyChanged(BR.displayDaysToEscalate)
 
             displayPriorityIcon =
-                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()), context)
             notifyPropertyChanged(BR.displayPriorityIcon)
         }
 
@@ -85,7 +90,7 @@ class PresoTask(
             notifyPropertyChanged(BR.displayEscalateBy)
 
             displayPriorityIcon =
-                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()))
+                ViewUtils.getIconForPriority(getPriority(System.currentTimeMillis()), context)
             notifyPropertyChanged(BR.displayPriorityIcon)
         }
 

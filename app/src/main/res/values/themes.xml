@@ -23,6 +23,8 @@
 
         <item name="activeButtonColor">@color/brand_purple</item>
         <item name="disabledButtonColor">@color/sub_button_background</item>
+
+        <item name="priority_0_icon">@drawable/ic_prio_0_lm</item>
     </style>
 
     <style name="Theme.MyPrio.NoActionBar">
@@ -30,5 +32,32 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.MyPrio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.MyPrio.Toolbar" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/brand_purple</item>
+        <item name="popupTheme">@style/Theme.MyPrio.PopupOverlay</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+
+    <style name="Theme.MyPrio.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:titleTextColor" tools:targetApi="m">@android:color/white</item>
+    </style>
+
+    <style name="MainButton">
+        <item name="android:backgroundTint">?attr/activeButtonColor</item>
+        <item name="android:textColor">@color/main_text_DM</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.3</item>
+    </style>
+
+    <style name="SubButton">
+        <item name="android:backgroundTint">@color/sub_button_background</item>
+        <item name="android:textColor">@color/main_text_DM</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.3</item>
+    </style>
+
 </resources>

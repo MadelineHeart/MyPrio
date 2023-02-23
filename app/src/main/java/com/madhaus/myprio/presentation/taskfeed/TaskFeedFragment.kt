@@ -48,7 +48,6 @@ class TaskFeedFragment: Fragment() {
         binding.toolbar.inflateMenu(R.menu.task_feed_menu)
         binding.toolbar.title = "Task Feed"
         binding.toolbar.setupWithNavController(findNavController())
-
     }
 
     private fun handleMenuItem(item: MenuItem): Boolean {

@@ -1,5 +1,6 @@
 package com.madhaus.myprio.domain.dagger
 
+import android.app.Application
 import com.madhaus.myprio.data.TaskRepository
 import com.madhaus.myprio.data.dagger.RepositoryModule
 import com.madhaus.myprio.data.repos.SettingsRepository

@@ -14,5 +14,6 @@
         <attr name="activeButtonColor" format="color"/>
         <attr name="disabledButtonColor" format="color"/>
 
+        <attr name="priority_0_icon" format="integer"/>
     </declare-styleable>
 </resources>

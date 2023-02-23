@@ -1,5 +1,6 @@
 package com.madhaus.myprio.domain
 
+import android.content.Context
 import com.madhaus.myprio.R
 import com.madhaus.myprio.data.TimeUtils
 import com.madhaus.myprio.data.repos.SettingsRepository
@@ -11,11 +12,14 @@ interface PushNotificationUseCase {
     fun getTimeToNextDigest(currentTime: Long): Long
 }
 
-class PushNotificationUseCaseImpl(private val taskUseCase: TaskUseCase,
-                                  private val settingsRepository: SettingsRepository) : PushNotificationUseCase {
-    override fun fetchDailyDigest(forTime: Long): List<PresoNotification> =
-        taskUseCase.fetchTaskList(forTime)
+class PushNotificationUseCaseImpl(
+    private val taskUseCase: TaskUseCase,
+    private val settingsRepository: SettingsRepository
+) : PushNotificationUseCase {
+    override fun fetchDailyDigest(forTime: Long): List<PresoNotification> {
+        return taskUseCase.fetchTaskList(forTime)
             .filter { it.getPriority(forTime) >= settingsRepository.getDigestMinimumPriority() }
+            .sortedBy { it.getPriority(forTime) } // Highest prio sent last so it's at top of notif stack
             .map {
                 PresoNotification(
                     it.title,
@@ -23,6 +27,7 @@ class PushNotificationUseCaseImpl(private val taskUseCase: TaskUseCase,
                     it.description
                 )
             }
+    }
 
     override fun getTimeToNextDigest(currentTime: Long): Long {
         return ((24 * 60 * 60 * 1000) -                          // An entire day
