@@ -56,7 +56,7 @@
 
     <style name="MainButton">
         <item name="colorOnPrimary">@color/brand_purple</item>
-        <item name="android:backgroundTint">?attr/activeButtonColor</item>
+        <item name="android:backgroundTint">@color/brand_purple</item>
         <item name="android:textColor">@color/main_text_DM</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
