@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <import type="java.util.List" />
 
         <variable
@@ -18,7 +20,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="?attr/colorOnSecondary">
 
         <androidx.appcompat.widget.Toolbar
@@ -42,14 +44,24 @@
 
             </ScrollView>
 
+            <TextView
+                android:id="@+id/noTaskMessage"
+                style="@style/HeaderText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No tasks being tracked.\nPress the + to get started!"
+                android:textSize="26sp"
+                android:visibility="@{tasks.empty ? View.VISIBLE : View.GONE}" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:background="?attr/activeButtonColor"
                 android:elevation="4dp"
                 android:src="@drawable/ic_round_add_24"
-                android:background="?attr/activeButtonColor"
                 app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
