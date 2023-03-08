@@ -38,6 +38,7 @@ class PresoNotification(
         }
 
         val builder = Notification.Builder(context)
+            .setGroup(groupTag)
             .setSmallIcon(R.drawable.ic_notif_icon)
             .setPriority(Notification.PRIORITY_MAX)
             .setCustomContentView(notificationHeader)
@@ -51,10 +52,14 @@ class PresoNotification(
         val tapPendingIntent: PendingIntent =
             PendingIntent.getActivity(context, 0, tapIntent, PendingIntent.FLAG_IMMUTABLE)
         builder.setContentIntent(tapPendingIntent)
-        builder.setGroup(groupTag)
 
         // Edit Button intents
+        val editIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
 
+        val editPendingIntent = PendingIntent.getActivity(context, 0, editIntent, PendingIntent.FLAG_IMMUTABLE)
+        notificationTray.setOnClickPendingIntent(R.id.editButton, editPendingIntent)
 
         // Done Button intents
 
@@ -62,5 +67,9 @@ class PresoNotification(
             builder.setChannelId(channelId)
 
         return builder.build()
+    }
+
+    companion object {
+        const val EDIT_DEEPLINK_ID = "My_Prio_Edit_Deeplink_Id"
     }
 }

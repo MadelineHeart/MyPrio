@@ -3,7 +3,9 @@ package com.madhaus.myprio.presentation
 import android.app.*
 import android.content.Context
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.work.*
+import com.madhaus.myprio.R
 import com.madhaus.myprio.dagger.BaseDaggerComponent
 import com.madhaus.myprio.domain.PushNotificationUseCase
 import com.madhaus.myprio.presentation.models.PresoNotification
@@ -81,7 +83,9 @@ class PushNotificationWorker(
             pushUseCase.fetchDailyDigest(System.currentTimeMillis()).forEach {
                 sendNotification(it)
             }
+            sendSummaryNotification()
         }
+
     }
 
     private fun sendNotification(notif: PresoNotification) {
@@ -91,11 +95,26 @@ class PushNotificationWorker(
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sendSummaryNotification() {
+        val summary = Notification.Builder(appContext, channelId)
+            .setSmallIcon(R.drawable.ic_notif_icon)
+            .setStyle(Notification.InboxStyle().setSummaryText("Today's Daily Digest"))
+            .setGroup(SEND_DIGEST_TAG)
+            .setGroupSummary(true)
+            .build()
+
+        notifManager.notify(summaryId.mostSignificantBits.toInt(), summary)
+    }
+
     companion object {
         private val channelId: String = "My_Prio_Notifs"
 
         private val INIT_PUSH_TAG = "My_Prio_Init_Push"
         private val SEND_DIGEST_TAG = "My_Prio_Daily_Digest"
+
+        // String doesn't really matter, just needs to be consistent
+        private val summaryId = UUID.fromString("313701fc-c222-488d-b9c9-432237413155")
 
         fun activate(context: Context) {
             WorkManager
