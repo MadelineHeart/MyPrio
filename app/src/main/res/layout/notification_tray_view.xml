@@ -3,22 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="end"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/editButton"
-        style="@style/SubButton"
-        android:layout_width="120dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
-        android:text="EDIT" />
+    <include layout="@layout/notification_header" />
 
-    <Button
-        android:id="@+id/doneButton"
-        style="@style/MainButton"
-        android:layout_width="120dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:text="DONE" />
+    <TextView
+        android:id="@+id/notification_description"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/editButton"
+            style="@style/SubButton"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:text="EDIT"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/doneButton"
+            style="@style/MainButton"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:text="DONE"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,11 +1,8 @@
 package com.madhaus.myprio.domain
 
-import android.content.Context
-import com.madhaus.myprio.R
 import com.madhaus.myprio.data.TimeUtils
 import com.madhaus.myprio.data.repos.SettingsRepository
 import com.madhaus.myprio.presentation.models.PresoNotification
-import javax.inject.Inject
 
 interface PushNotificationUseCase {
     fun fetchDailyDigest(forTime: Long): List<PresoNotification>
@@ -22,6 +19,7 @@ class PushNotificationUseCaseImpl(
             .sortedBy { it.getPriority(forTime) } // Highest prio sent last so it's at top of notif stack
             .map {
                 PresoNotification(
+                    it.id,
                     it.title,
                     it.getPriority(forTime),
                     it.description

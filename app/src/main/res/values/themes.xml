@@ -44,6 +44,18 @@
         <item name="android:titleTextColor" tools:targetApi="m">@android:color/white</item>
     </style>
 
+    <style name="HeaderText" parent="Theme.MyPrio">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/main_text_LM</item>
+    </style>
+
+    <style name="BodyText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/main_text_LM</item>
+    </style>
+
     <style name="MainButton">
         <item name="android:backgroundTint">@color/brand_purple</item>
         <item name="android:textColor">@color/main_text_DM</item>

@@ -34,7 +34,7 @@
     <style name="HeaderText" parent="Theme.MyPrio">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?attr/mainText</item>
+        <item name="android:textColor">@color/main_text_DM</item>
     </style>
 
     <style name="BodyText">

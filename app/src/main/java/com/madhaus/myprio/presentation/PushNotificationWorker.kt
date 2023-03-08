@@ -50,7 +50,7 @@ class PushNotificationWorker(
     }
 
     override fun doWork(): Result {
-        if (shouldSend())
+//        if (shouldSend())
             sendDailyDigest()
         startPushWorker()
 
@@ -86,7 +86,7 @@ class PushNotificationWorker(
 
     private fun sendNotification(notif: PresoNotification) {
         notifManager.notify(
-            UUID.randomUUID().mostSignificantBits.toInt(),
+            notif.id.mostSignificantBits.toInt(),
             notif.buildSystemNotif(appContext, SEND_DIGEST_TAG, channelId)
         )
     }
