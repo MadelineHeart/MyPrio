@@ -52,7 +52,7 @@ class PushNotificationWorker(
     }
 
     override fun doWork(): Result {
-//        if (shouldSend())
+        if (shouldSend())
             sendDailyDigest()
         startPushWorker()
 
