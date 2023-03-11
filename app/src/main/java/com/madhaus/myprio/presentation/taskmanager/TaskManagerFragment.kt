@@ -33,7 +33,7 @@ class TaskManagerFragment : Fragment() {
         BaseDaggerComponent.injector.inject(this)
 
         val binding = TaskManagerViewBinding.inflate(inflater, container, false)
-        binding.presoTask = PresoTask(vm.getTask(arguments?.getSerializable("UUID") as? UUID), requireContext(), true)
+        binding.presoTask = PresoTask(vm.getTask(arguments?.getSerializable(MANAGER_TASK_ID_TAG) as? UUID), requireContext(), true)
         binding.vm = vm
         _binding = binding
 
@@ -92,5 +92,9 @@ class TaskManagerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val MANAGER_TASK_ID_TAG = "My_Prio_Manager_Task_Id_tag"
     }
 }

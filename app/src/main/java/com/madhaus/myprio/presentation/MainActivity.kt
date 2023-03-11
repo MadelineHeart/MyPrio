@@ -1,6 +1,7 @@
 package com.madhaus.myprio.presentation
 
 import android.Manifest.permission.POST_NOTIFICATIONS
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,6 +16,7 @@ import com.madhaus.myprio.dagger.BaseDaggerComponent
 import com.madhaus.myprio.databinding.ActivityMainBinding
 import com.madhaus.myprio.presentation.settings.SettingsViewModel
 import com.madhaus.myprio.presentation.taskfeed.TaskFeedViewModel
+import com.madhaus.myprio.presentation.taskmanager.TaskManagerFragment
 import com.madhaus.myprio.presentation.taskmanager.TaskManagerViewModel
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenResumed {
             taskFeedViewModel.goToManagerFlow.collectLatest { taskId ->
                 val bundle = Bundle()
-                taskId?.let { bundle.putSerializable("UUID", it) }
+                taskId?.let { bundle.putSerializable(TaskManagerFragment.MANAGER_TASK_ID_TAG, it) }
                 navController.navigate(R.id.navigate_feed_to_manager, bundle)
             }
         }

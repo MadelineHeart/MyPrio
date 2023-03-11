@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="end"
-        android:visibility="gone"
         android:orientation="horizontal">
 
         <Button
