@@ -24,7 +24,8 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideNotificationUseCase(taskUseCase: TaskUseCase,
+    fun provideNotificationUseCase(appContext: Application,
+                                   taskUseCase: TaskUseCase,
                                    settingsRepository: SettingsRepository): PushNotificationUseCase =
-        PushNotificationUseCaseImpl(taskUseCase, settingsRepository)
+        PushNotificationUseCaseImpl(appContext, taskUseCase, settingsRepository)
 }

@@ -3,7 +3,7 @@ package com.madhaus.myprio
 import android.app.Application
 import com.madhaus.myprio.dagger.BaseDaggerComponent
 import com.madhaus.myprio.dagger.DaggerBaseDaggerComponent
-import com.madhaus.myprio.presentation.PushNotificationWorker
+import com.madhaus.myprio.presentation.async.PushNotificationWorker
 import timber.log.Timber
 
 class MainApplication: Application() {

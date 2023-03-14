@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,8 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.madhaus.myprio.R
 import com.madhaus.myprio.dagger.BaseDaggerComponent
 import com.madhaus.myprio.databinding.SettingsViewBinding
-import com.madhaus.myprio.presentation.PushNotificationWorker
-import timber.log.Timber
+import com.madhaus.myprio.presentation.async.PushNotificationWorker
 import javax.inject.Inject
 
 class SettingsFragment: Fragment() {

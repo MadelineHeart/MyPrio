@@ -1,5 +1,7 @@
 package com.madhaus.myprio.domain
 
+import android.app.NotificationManager
+import android.content.Context
 import com.madhaus.myprio.data.TimeUtils
 import com.madhaus.myprio.data.repos.SettingsRepository
 import com.madhaus.myprio.presentation.models.PresoNotification
@@ -7,9 +9,11 @@ import com.madhaus.myprio.presentation.models.PresoNotification
 interface PushNotificationUseCase {
     fun fetchDailyDigest(forTime: Long): List<PresoNotification>
     fun getTimeToNextDigest(currentTime: Long): Long
+    fun dismissNotification(notifId: Int)
 }
 
 class PushNotificationUseCaseImpl(
+    private val appContext: Context,
     private val taskUseCase: TaskUseCase,
     private val settingsRepository: SettingsRepository
 ) : PushNotificationUseCase {
@@ -32,5 +36,10 @@ class PushNotificationUseCaseImpl(
                 TimeUtils.getMillisInCurrentDay(currentTime) +  // Time till 00:00 of the next day
                 (1000 * 60 * settingsRepository.getDigestSendTimeInMinutes())) %// Send time into text day
                 (24 * 60 * 60 * 1000) // Mod by entire day in case send time is later today
+    }
+
+    override fun dismissNotification(notifId: Int) {
+        val notifManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notifManager.cancel(notifId)
     }
 }

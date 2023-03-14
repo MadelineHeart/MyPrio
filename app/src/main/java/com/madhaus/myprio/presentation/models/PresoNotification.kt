@@ -14,6 +14,7 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.madhaus.myprio.R
 import com.madhaus.myprio.presentation.MainActivity
 import com.madhaus.myprio.presentation.ViewUtils
+import com.madhaus.myprio.presentation.async.MarkDoneService
 import com.madhaus.myprio.presentation.taskmanager.TaskManagerFragment
 import java.util.*
 
@@ -57,15 +58,25 @@ class PresoNotification(
         builder.setContentIntent(tapPendingIntent)
 
         // Edit Button intent
-        val args = Bundle().apply { putSerializable(TaskManagerFragment.MANAGER_TASK_ID_TAG, id) }
+        val editArgs =
+            Bundle().apply { putSerializable(TaskManagerFragment.MANAGER_TASK_ID_TAG, id) }
         val editPendingIntent = NavDeepLinkBuilder(context)
             .setGraph(R.navigation.nav_graph)
             .setDestination(R.id.TaskManagerFragment)
-            .setArguments(args)
+            .setArguments(editArgs)
             .createPendingIntent()
         notificationTray.setOnClickPendingIntent(R.id.editButton, editPendingIntent)
 
         // Done Button intent
+        val doneIntent = Intent(context, MarkDoneService::class.java)
+            .putExtra(MARK_TASK_DONE_ID_TAG, id)
+        notificationTray.setOnClickPendingIntent(
+            R.id.doneButton,
+            PendingIntent.getService(
+                context, uuidToNotifIdInt(id), doneIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+            )
+        )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             builder.setChannelId(channelId)
@@ -74,6 +85,8 @@ class PresoNotification(
     }
 
     companion object {
-        const val EDIT_DEEPLINK_ID = "My_Prio_Edit_Deeplink_Id"
+        const val MARK_TASK_DONE_ID_TAG = "My_Prio_Mark_Task_Done_Id"
+
+        fun uuidToNotifIdInt(uuid: UUID): Int = uuid.mostSignificantBits.toInt()
     }
 }

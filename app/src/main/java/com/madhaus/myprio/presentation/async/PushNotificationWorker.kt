@@ -1,4 +1,4 @@
-package com.madhaus.myprio.presentation
+package com.madhaus.myprio.presentation.async
 
 import android.app.*
 import android.content.Context
@@ -71,7 +71,8 @@ class PushNotificationWorker(
                 .addTag(SEND_DIGEST_TAG)
                 .build()
 
-        workManager.enqueueUniqueWork(SEND_DIGEST_TAG,
+        workManager.enqueueUniqueWork(
+            SEND_DIGEST_TAG,
             ExistingWorkPolicy.REPLACE,
             pushWorkRequest)
     }
@@ -90,7 +91,7 @@ class PushNotificationWorker(
 
     private fun sendNotification(notif: PresoNotification) {
         notifManager.notify(
-            notif.id.mostSignificantBits.toInt(),
+            PresoNotification.uuidToNotifIdInt(notif.id),
             notif.buildSystemNotif(appContext, SEND_DIGEST_TAG, channelId)
         )
     }

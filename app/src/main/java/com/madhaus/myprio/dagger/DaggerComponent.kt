@@ -3,8 +3,9 @@ package com.madhaus.myprio.dagger
 import android.app.Application
 import com.madhaus.myprio.data.dagger.RepositoryModule
 import com.madhaus.myprio.domain.dagger.UseCaseModule
-import com.madhaus.myprio.presentation.PushNotificationWorker
+import com.madhaus.myprio.presentation.async.PushNotificationWorker
 import com.madhaus.myprio.presentation.MainActivity
+import com.madhaus.myprio.presentation.async.MarkDoneService
 import com.madhaus.myprio.presentation.dagger.ViewModelModule
 import com.madhaus.myprio.presentation.settings.SettingsFragment
 import com.madhaus.myprio.presentation.taskfeed.TaskFeedAdapter
@@ -46,4 +47,7 @@ interface BaseDaggerComponent {
 
     /** Workers **/
     fun inject(notificationWorker: PushNotificationWorker)
+
+    /** Services **/
+    fun inject(markDoneService: MarkDoneService)
 }
