@@ -1,14 +1,22 @@
 package com.madhaus.myprio.domain
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import com.madhaus.myprio.MainApplication
 import com.madhaus.myprio.data.Task
 import com.madhaus.myprio.data.repos.SettingsRepository
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import java.util.*
 
+@RunWith(MockitoJUnitRunner::class)
 class PushNotificationUseCaseTests {
 
     var testTime: Long = 0 // Save a single time to avoid runtime distortions
@@ -69,7 +77,7 @@ class PushNotificationUseCaseTests {
         val taskList = listOf(task1, task2, task3, task4)
         whenever(taskUseCase.fetchTaskList(testTime)).thenReturn(taskList)
 
-        useCase = PushNotificationUseCaseImpl(taskUseCase, repo)
+        useCase = PushNotificationUseCaseImpl(mock(Context::class.java), taskUseCase, repo)
     }
 
     @Test

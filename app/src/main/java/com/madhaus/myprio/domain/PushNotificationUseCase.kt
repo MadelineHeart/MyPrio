@@ -7,6 +7,8 @@ import com.madhaus.myprio.data.repos.SettingsRepository
 import com.madhaus.myprio.presentation.models.PresoNotification
 
 interface PushNotificationUseCase {
+    // TODO make a get tasks that escalated, make new class of push and move daily digest to high-prio reminders
+
     fun fetchDailyDigest(forTime: Long): List<PresoNotification>
     fun getTimeToNextDigest(currentTime: Long): Long
     fun dismissNotification(notifId: Int)
