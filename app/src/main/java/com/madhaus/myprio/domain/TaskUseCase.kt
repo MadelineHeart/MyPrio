@@ -21,26 +21,26 @@ interface TaskUseCase {
     fun deleteTask(taskId: UUID): Boolean
 }
 
-class TaskUseCaseImpl(private val taskRepository: TaskRepository): TaskUseCase {
+class TaskUseCaseImpl(initTimestamp: Long,
+    private val taskRepository: TaskRepository): TaskUseCase {
 
     override val taskListFlow: MutableStateFlow<List<Task>> =
-        MutableStateFlow(fetchTaskList(System.currentTimeMillis()))
+        MutableStateFlow(fetchTaskList(initTimestamp))
 
     init {
         CoroutineScope(Dispatchers.Main).launch {
             taskRepository.fetchTasksFlow()
-                .map { tasks -> tasks.sortedWith(taskSortComparator) }
+                .map { tasks -> tasks.sortedWith(getTaskSortComparator(initTimestamp)) } // Should try to get this System out
                 .collectLatest {
                 taskListFlow.tryEmit(it)
             }
         }
     }
 
-
     override fun fetchTaskList(atTime: Long): List<Task> {
         return runBlocking {
             return@runBlocking taskRepository.fetchTasks()
-                .sortedWith(taskSortComparator)
+                .sortedWith(getTaskSortComparator(atTime))
         }
     }
 
@@ -78,8 +78,8 @@ class TaskUseCaseImpl(private val taskRepository: TaskRepository): TaskUseCase {
     }
 
     companion object {
-        private val taskSortComparator = kotlin.Comparator<Task> { o1, o2 ->
-            val prioCompare = o2.getPriority(System.currentTimeMillis()) - o1.getPriority(System.currentTimeMillis())
+        private fun getTaskSortComparator(timestamp: Long) = kotlin.Comparator<Task> { o1, o2 ->
+            val prioCompare = o2.getPriority(timestamp) - o1.getPriority(timestamp)
             val longDiff = o1.getRedoTimestamp() - o2.getRedoTimestamp()
             val timeCompare = if (longDiff > 0) 1 else -1 // Gotta do for Int overflow
             return@Comparator if (prioCompare != 0) prioCompare else timeCompare

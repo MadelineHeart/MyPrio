@@ -15,7 +15,7 @@ class UseCaseModule {
     @Provides
     @Singleton
     fun provideTaskUseCase(taskRepository: TaskRepository): TaskUseCase =
-        TaskUseCaseImpl(taskRepository)
+        TaskUseCaseImpl(System.currentTimeMillis(), taskRepository)
 
     @Provides
     @Singleton

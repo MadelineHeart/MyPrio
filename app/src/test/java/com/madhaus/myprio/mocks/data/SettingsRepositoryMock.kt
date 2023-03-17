@@ -1,21 +1,17 @@
 package com.madhaus.myprio.mocks.data
 
 import com.madhaus.myprio.data.repos.SettingsRepository
+import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 
-class SettingsRepositoryMock: SettingsRepository {
-    override fun getDigestMinimumPriority(): Int {
-        TODO("Not yet implemented")
-    }
+object SettingsRepositoryMock {
+    const val MINIMUM_PRIORITY = 3
+    const val DIGEST_SEND_TIME = 480 // 8:00 am
 
-    override fun setDigestMinimumPriority(newVal: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getDigestSendTimeInMinutes(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun setDigestSendTimeInMinutes(newVal: Int) {
-        TODO("Not yet implemented")
+    fun getStandardMockedRepo(): SettingsRepository {
+        val repo: SettingsRepository = Mockito.mock(SettingsRepository::class.java)
+        whenever(repo.getDigestMinimumPriority()).thenReturn(MINIMUM_PRIORITY)
+        whenever(repo.getDigestSendTimeInMinutes()).thenReturn(DIGEST_SEND_TIME)
+        return repo
     }
 }
