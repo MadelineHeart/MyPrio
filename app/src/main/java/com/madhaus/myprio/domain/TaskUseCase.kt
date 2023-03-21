@@ -21,8 +21,10 @@ interface TaskUseCase {
     fun deleteTask(taskId: UUID): Boolean
 }
 
-class TaskUseCaseImpl(initTimestamp: Long,
-    private val taskRepository: TaskRepository): TaskUseCase {
+class TaskUseCaseImpl(
+    initTimestamp: Long,
+    private val taskRepository: TaskRepository
+) : TaskUseCase {
 
     override val taskListFlow: MutableStateFlow<List<Task>> =
         MutableStateFlow(fetchTaskList(initTimestamp))
@@ -30,10 +32,10 @@ class TaskUseCaseImpl(initTimestamp: Long,
     init {
         CoroutineScope(Dispatchers.Main).launch {
             taskRepository.fetchTasksFlow()
-                .map { tasks -> tasks.sortedWith(getTaskSortComparator(initTimestamp)) } // Should try to get this System out
+                .map { tasks -> tasks.sortedWith(getTaskSortComparator(initTimestamp)) }
                 .collectLatest {
-                taskListFlow.tryEmit(it)
-            }
+                    taskListFlow.tryEmit(it)
+                }
         }
     }
 
@@ -52,7 +54,8 @@ class TaskUseCaseImpl(initTimestamp: Long,
 
     override fun fetchOrCreateTask(taskId: UUID?): Task {
         return runBlocking {
-            return@runBlocking taskId?.let { taskRepository.fetchTask(it) } ?: Task(UUID.randomUUID())
+            return@runBlocking taskId?.let { taskRepository.fetchTask(it) }
+                ?: Task(UUID.randomUUID())
         }
     }
 

@@ -13,14 +13,14 @@ interface SettingsUseCase {
     fun setDailyDigestSendTime(hours: Int, minutes: Int): Boolean
 }
 
-class SettingsUseCaseImpl(private val settingsRepo: SettingsRepository): SettingsUseCase {
+class SettingsUseCaseImpl(private val settingsRepo: SettingsRepository) : SettingsUseCase {
 
     override fun getDailyDigestMinPriority(): Int {
         return settingsRepo.getDigestMinimumPriority()
     }
 
     override fun setDailyDigestMinPriority(newVal: Int): Boolean {
-        if (!(0..9).contains(newVal))
+        if (!(1..9).contains(newVal))
             return false
         settingsRepo.setDigestMinimumPriority(newVal)
         return true
@@ -32,9 +32,12 @@ class SettingsUseCaseImpl(private val settingsRepo: SettingsRepository): Setting
     }
 
     override fun setDailyDigestSendTime(hours: Int, minutes: Int): Boolean {
-        if (!(0..24).contains(hours) && !(0..60).contains(minutes))
+        val toSetMinutes = (hours * 60) + minutes
+        if (!(0..24).contains(hours) ||
+            !(0..60).contains(minutes) ||
+            !(0..1440).contains(toSetMinutes))
             return false
-        settingsRepo.setDigestSendTimeInMinutes((hours * 60) + minutes)
+        settingsRepo.setDigestSendTimeInMinutes(toSetMinutes)
         return true
     }
 }

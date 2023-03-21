@@ -22,6 +22,13 @@ class SettingsUseCaseTest {
 
     @Test
     fun setDailyDigestMinPriority() {
+        assertTrue(useCase.setDailyDigestMinPriority(1))
+        assertTrue(useCase.setDailyDigestMinPriority(4))
+        assertTrue(useCase.setDailyDigestMinPriority(9))
+
+        assertFalse(useCase.setDailyDigestMinPriority(0))
+        assertFalse(useCase.setDailyDigestMinPriority(-4))
+        assertFalse(useCase.setDailyDigestMinPriority(10))
     }
 
     @Test
@@ -32,5 +39,12 @@ class SettingsUseCaseTest {
 
     @Test
     fun setDailyDigestSendTime() {
+        assertTrue(useCase.setDailyDigestSendTime(0, 0))
+        assertTrue(useCase.setDailyDigestSendTime(9, 30))
+        assertTrue(useCase.setDailyDigestSendTime(23, 60))
+
+        assertFalse(useCase.setDailyDigestSendTime(-1, 20))
+        assertFalse(useCase.setDailyDigestSendTime(1, -20))
+        assertFalse(useCase.setDailyDigestSendTime(24, 30))
     }
 }
