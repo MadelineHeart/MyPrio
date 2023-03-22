@@ -1,9 +1,9 @@
 package com.madhaus.myprio.domain
 
 import com.madhaus.myprio.MainDispatcherRule
+import com.madhaus.myprio.data.Task
 import com.madhaus.myprio.mocks.data.TaskRepositoryMock
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,24 +34,28 @@ class TaskUseCaseTest {
     @Test
     fun fetchTask() {
         assertEquals(TaskRepositoryMock.task1Id, useCase.fetchTask(TaskRepositoryMock.task1Id)?.id)
-        assertEquals(null, useCase.fetchTask(UUID.fromString(TaskRepositoryMock.notIncludedId.toString())))
+        assertEquals(null, useCase.fetchTask(TaskRepositoryMock.notIncludedId))
     }
 
     @Test
     fun fetchOrCreateTask() {
         assertEquals(TaskRepositoryMock.task1Id, useCase.fetchTask(TaskRepositoryMock.task1Id)?.id)
-        assertNotNull(useCase.fetchOrCreateTask(UUID.fromString(TaskRepositoryMock.notIncludedId.toString())))
-    }
-
-    @Test
-    fun makeOrUpdateTask() {
+        assertNotNull(useCase.fetchOrCreateTask(TaskRepositoryMock.notIncludedId))
     }
 
     @Test
     fun markTaskDone() {
+        assertTrue(useCase.markTaskDone(TaskRepositoryMock.task1Id, testTime + Task.millisInDay))
+
+        assertFalse(useCase.markTaskDone(TaskRepositoryMock.notIncludedId, Task.millisInDay))
     }
 
     @Test
     fun deleteTask() {
+        assertNotNull(useCase.fetchTask(TaskRepositoryMock.task1Id))
+        assertTrue(useCase.deleteTask(TaskRepositoryMock.task1Id))
+        assertNull(useCase.fetchTask(TaskRepositoryMock.task1Id))
+
+        assertFalse(useCase.deleteTask(TaskRepositoryMock.notIncludedId))
     }
 }

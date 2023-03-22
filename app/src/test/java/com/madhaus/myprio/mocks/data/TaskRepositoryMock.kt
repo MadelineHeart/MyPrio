@@ -19,7 +19,7 @@ object TaskRepositoryMock {
     fun getStandardMockedRepo(timestamp: Long): TaskRepository {
         val repo = mock(TaskRepository::class.java)
 
-        val task1 = Task(
+        var task1: Task? = Task(
             TaskUseCaseMock.task1Id,
             title = "A working task",
             basePriority = 1,
@@ -29,7 +29,7 @@ object TaskRepositoryMock {
             daysToEscalate = 4,
             lastCompletedTimestamp = timestamp
         )
-        val task2 = Task(
+        var task2 = Task(
             TaskUseCaseMock.task2Id,
             title = "A working task",
             basePriority = 3,
@@ -39,7 +39,7 @@ object TaskRepositoryMock {
             daysToEscalate = 4,
             lastCompletedTimestamp = timestamp - (Task.millisInDay * 1)
         )
-        val task3 = Task(
+        var task3 = Task(
             TaskUseCaseMock.task3Id,
             title = "A working task",
             basePriority = 1,
@@ -49,7 +49,7 @@ object TaskRepositoryMock {
             daysToEscalate = 4,
             lastCompletedTimestamp = timestamp - (Task.millisInDay * 3)
         )
-        val task4 = Task(
+        var task4 = Task(
             TaskUseCaseMock.task4Id,
             title = "A working task",
             basePriority = 1,
@@ -60,10 +60,19 @@ object TaskRepositoryMock {
             lastCompletedTimestamp = timestamp - (Task.millisInDay * 4)
         )
 
-        val taskList = listOf(task1, task2, task3, task4)
+        val taskList = listOf(task1!!, task2, task3, task4)
 
         repo.stub { onBlocking { repo.fetchTasks() }.thenReturn(taskList) }
         repo.stub { onBlocking { repo.fetchTask(task1Id) }.thenReturn(task1) }
+        repo.stub {
+            onBlocking { repo.deleteTask(task1Id) }.then {
+                repo.stub { onBlocking { repo.fetchTask(task1Id) }.thenReturn(null) }
+
+                true
+            }
+        }
+        repo.stub { onBlocking { repo.deleteTask(notIncludedId) }.thenReturn(false) }
+        repo.stub { onBlocking { repo.saveTask(task1) }.thenReturn(true) }
 
         return repo
     }
