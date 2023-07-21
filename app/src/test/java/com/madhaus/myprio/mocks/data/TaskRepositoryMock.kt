@@ -5,7 +5,6 @@ import com.madhaus.myprio.data.TaskRepository
 import com.madhaus.myprio.mocks.domain.TaskUseCaseMock
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.stub
-import org.mockito.kotlin.whenever
 import java.util.*
 
 object TaskRepositoryMock {

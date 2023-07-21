@@ -51,9 +51,6 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVers"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVers"
     kapt "com.google.dagger:dagger-compiler:$daggerVers"
-    implementation "com.google.dagger:dagger-android:$daggerVers"
-    implementation "com.google.dagger:dagger-android-support:$daggerVers"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVers"
 
     // Caching
     implementation "androidx.room:room-runtime:$roomVers"
@@ -80,6 +77,9 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.0"
 
+    androidTestImplementation "junit:junit:$jUnitVers"
+    androidTestImplementation 'androidx.test:core:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitExtVers"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVers"
 }
